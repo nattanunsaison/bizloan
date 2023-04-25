@@ -24,7 +24,7 @@ class SendReceiveAmountConfirmEmail
     public function handle(ReceiveAmountConfirm $event): void
     {
         //to send Email Notify Account that Receive Amount has Confirm
-        $users = \App\Models\User::find(1);
+        $users = (new \App\Http\Controllers\HelperController)->getSSARoleUserId();
         //$users = \App\Models\User::whereIn('id',[1,60])->get();
         //$users = ['paopan@siamsaison.com','thitikwan@siamsaison.com'];
         Notification::send($users, new ReceiveAmountConfirmed($event->record));

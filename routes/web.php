@@ -88,7 +88,6 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/test_anything',function(){
-    $password = 'password';
-    return __('words.'.$password);
+    return (new \App\Http\Controllers\HelperController)->getSSARoleUserId();
 });
 require __DIR__.'/auth.php';

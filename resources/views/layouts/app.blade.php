@@ -13,7 +13,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         
         <!-- Flowbites CSS -->
-        <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.css" rel="stylesheet" /> -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css"  rel="stylesheet" />
         
         <!-- Tailwind element -->
         <!-- <link
@@ -31,8 +31,8 @@
             } 
         </style>
         <!-- Scripts -->
-        <link href="{{asset('/app-62708d92.css')}}" rel='stylesheet'></script>
-        @vite(['resources/css/app.css', 'resources/js/app.js','resources/js/main.js'])
+        <link href="{{asset('/app-541e4312.css')}}" rel='stylesheet'>
+        {{--@vite(['resources/css/app.css', 'resources/js/app.js'])--}}
     </head>
     <body class="antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -57,7 +57,7 @@
         <script src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/tw-elements.umd.min.js"></script>
 
         <!-- Flowbites JS -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
 
         <!-- Build js -->
         <!--script src="{{asset('/app-60f5163b.js')}}"></script-->
