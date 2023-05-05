@@ -54,7 +54,7 @@
                             <td class='text-right'>{{number_format($order->installments->first()->delayPenalty()['delay_penalty'],2)}}</td>
                             <td>{{number_format($detail->paid_interest,2)}}</td>
                             <td>{{number_format($detail->paid_late_charge,2)}}</td>
-                            <td>Outstanding principal</td>
+                            <td>{{number_format($detail->principal)}}</td>
                             <td>{{number_format($detail->payback_amount,2)}}</td>
                             <td>{{number_format($detail->exceeded_amount,2)}}</td>
                             <td>{{number_format($detail->tax,2)}}</td>
