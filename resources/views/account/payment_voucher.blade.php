@@ -100,7 +100,6 @@
                         <td colspan='6' style='text-align:left'>Date</td>
                         <td style='text-align:left'>{{$repayment_ymd}}</td>
                     </tr>
-
                 </tbody>
             </table>
             
