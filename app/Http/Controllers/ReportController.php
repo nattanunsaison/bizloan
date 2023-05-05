@@ -145,7 +145,7 @@ class ReportController extends Controller
 
         //return Excel::download(new ScbTemplateExport($receive_history_id), $file_name);
         $receive_amount_detail = $record->receive_amount_detail;
-        $amount_read = $this->Convert($record->receive_amount+$receive_amount_detail->paid_interest);
+        $amount_read = $this->Convert($receive_amount_detail->principal+$receive_amount_detail->paid_interest+$receive_amount_detail->paid_late_charge);
         return view('account.seller_receipt',[
             'record'=>$record,
             'amount_read'=>$amount_read

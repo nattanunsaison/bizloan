@@ -183,7 +183,8 @@ class SellerReceiptExport implements FromView,WithDrawings,WithTitle,WithEvents,
     {
         $record = $this->record;
         $receive_amount_detail = $record->receive_amount_detail;
-        $amount_read = (new \App\Http\Controllers\ReportController)->Convert($record->receive_amount+$receive_amount_detail->paid_interest);
+        $account_paid_amount = $receive_amount_detail->principal+$receive_amount_detail->paid_interest+$receive_amount_detail->paid_late_charge;
+        $amount_read = (new \App\Http\Controllers\ReportController)->Convert($account_paid_amount);
         return view('account.seller_receipt', [
             'record' => $record,
             'amount_read'=>$amount_read

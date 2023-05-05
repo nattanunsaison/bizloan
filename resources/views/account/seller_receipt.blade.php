@@ -90,7 +90,7 @@
                     <tr>
                         @for($i=0;$i < 22;$i++) <td></td> @endfor
                         <td colspan='3' style='text-align:left'>เลขที่ (No)</td>
-                        <td style='text-align:left'>receipt_no</td>
+                        <td style='text-align:left'>{{$record->seller_receipt_number}}</td>
                     </tr>
                     <tr>
                         @for($i=0;$i < 22;$i++) <td></td> @endfor
@@ -126,7 +126,7 @@
                 @php 
                     $order = $record->order;
                     $receive_amount_detail = $record->receive_amount_detail;
-                    $paid_total = $receive_amount_detail->principal + $receive_amount_detail->paid_interest;
+                    $paid_total = $receive_amount_detail->principal + $receive_amount_detail->paid_interest + $receive_amount_detail->paid_late_charge;
                     $input_ymd = \Carbon\Carbon::parse($order->input_ymd);
                     $receive_ymd = \Carbon\Carbon::parse($record->receive_ymd);
                     $datediff = $receive_ymd->diffInDays($input_ymd);
@@ -136,18 +136,44 @@
                     <td colspan='4' style='text-align:center'>{{$order->order_number}} </td>
                     <td colspan='4' style='text-align:right'>{{$receive_amount_detail->principal}}</td>
                     <td colspan='4' style='text-align:right'>{{$receive_amount_detail->paid_interest}}</td>
-                    <td colspan='4' style='text-align:right'>{{$receive_amount_detail->paid_delay_penalty ?? 0}}</td>
+                    <td colspan='4' style='text-align:right'>{{$receive_amount_detail->paid_late_charge ?? 0}}</td>
                     <td colspan='4' style='text-align:right'>{{$receive_amount_detail->exceeded_amount ?? 0}} </td>
                     <td colspan='4' style='text-align:right'>0 </td>
                     <td colspan='5' style='text-align:right'>{{$paid_total}} </td>
                 </tr>
-                @for($i=0;$i < 6;$i++)
+                @for($i=0;$i < 2;$i++)
                 <tr>
                     <td colspan='4' style='color:white'>{{1}}</td>
                     <td colspan='20'style='color:white'>รับเงินตามสัญญาโอนสิทธิ์</td>
                     <td colspan='5' style='color:white'>{{$record->receive_amount}}</td>
                 </tr>
-                    
+                @endfor
+                <tr>
+                    <td colspan='17' style='color:white'>{{1}}</td>
+                    <td colspan='7' >เงินต้น 10%</td>
+                    <td colspan='5' style='text-align:right' >{{floor($receive_amount_detail->principal*0.1*100)/100}}</td>
+                </tr>
+                <tr>
+                    <td colspan='17' style='color:white'>{{1}}</td>
+                    <td colspan='7' >หัก ดอกเบี้ยและค่าปรับล่าช้า</td>
+                    <td colspan='5' style='text-align:right'>{{$receive_amount_detail->paid_interest+ $receive_amount_detail->paid_late_charge}}</td>
+                </tr>
+                <tr>
+                    <td colspan='17' style='color:white'>{{1}}</td>
+                    <td colspan='7' >บวกภาษีหัก ณ ที่จ่าย 1%</td>
+                    <td colspan='5' style='text-align:right'>{{$receive_amount_detail->paid_tax}}</td>
+                </tr>
+                <tr>
+                    <td colspan='17' style='color:white'>{{1}}</td>
+                    <td colspan='7' >ยอดโอนสุทธิ</td>
+                    <td colspan='5' style='text-align:right'>{{$receive_amount_detail->payback_amount}}</td>
+                </tr>
+                @for($i=0;$i < 2;$i++)
+                <tr>
+                    <td colspan='4' style='color:white'>{{1}}</td>
+                    <td colspan='20'style='color:white'>รับเงินตามสัญญาโอนสิทธิ์</td>
+                    <td colspan='5' style='color:white'>{{$record->receive_amount}}</td>
+                </tr>
                 @endfor
                 <tr>
                     <td colspan='24' style='text-decoration:underline'>รายละเอียดการคำนวณดอกเบี้ย</td>
@@ -200,7 +226,7 @@
                 <tr>
                     <td colspan='19'>ตัวอักษร ({{$amount_read}})</td>
                     <td colspan='5'>จำนวนเงิน (TOTAL)</td>
-                    <td colspan='5' style='text-align:right'>{{$record->receive_amount}}</td>
+                    <td colspan='5' style='text-align:right'>{{$paid_total}}</td>
                 </tr>
                 </tbody>
             </table>

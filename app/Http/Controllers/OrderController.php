@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\{order,contractors,dealers,ScfReceiveAmountHistory,ReceiveAmountDetail};
-    use App\Events\{ReceiveAmountConfirm,DeleteAmountConfirm};
+use App\Events\{ReceiveAmountConfirm,DeleteAmountConfirm};
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class OrderController extends Controller
 {
@@ -46,6 +47,7 @@ class OrderController extends Controller
         //return $latest_receive_detail->delayPenalty();
         //return $latest_receive_detail->order;
         //return count($order->receive_records);//->last();
+
         if(is_null($order))
             return 'Not found or order might be repaid';
         return view('repayment',[
@@ -76,10 +78,16 @@ class OrderController extends Controller
         else
             $exempt_interest = null;
         
-        if($request->outstanding_principal == 0)
+        $buyer_receipt_number = $this->getBuyerRTNumber($request->receive_date);
+        $seller_receipt_number = null;
+        if($request->outstanding_principal == 0){
             $paid_up_ymd = $request->receive_date;
-        else
+            $seller_receipt_number = $this->getSellerRTNumber($request->receive_date);
+        }
+        else{
             $paid_up_ymd = null;
+        }
+        //return $seller_receipt_number;
         //return $exempt_interest;
         //return $paid_up_ymd;
         //return $exempt_late_charge;
@@ -97,6 +105,8 @@ class OrderController extends Controller
             'exemption_interest'=>$exempt_interest,
             'create_user_id'=>auth()->user()->id,
             'net_pay_amount'=>$request->payback_amount_to_supplier,
+            'seller_receipt_number'=>$seller_receipt_number,
+            'buyer_receipt_number'=>$buyer_receipt_number
         ]);
         //receive amount detail can call via event
         //$order = order::find(request()->order_id);
@@ -202,4 +212,50 @@ class OrderController extends Controller
             'records'=>$records,
         ]);
     }
+
+    public function getBuyerRTNumber(String $ymd){ //Buyer receipt
+		$now = Carbon::parse($ymd);
+		$yearMonth = $now->copy()->isoFormat('YYYYMM');
+        
+		$latestRecord = ScfReceiveAmountHistory::whereNotNull('buyer_receipt_number')->where('receive_ymd','like',$yearMonth.'%')->get()->last();
+		//return $latestRecord;
+        if(is_null($latestRecord)){
+            $runningNo = 1;
+            //return 1;
+        }
+		else if(Carbon::parse($latestRecord->receive_ymd)->isoFormat('YYYYMM') != $yearMonth){
+			$runningNo = 1;
+            //return 2;
+		}else{
+			$runningNo = intval(substr($latestRecord->buyer_receipt_number,-3))+1;
+            //return 3;
+		}
+
+		$filledZero = sprintf('%03d', $runningNo);;
+		$fullRunningNo = 'RT-SCF'.$now->copy()->isoFormat('YYYYMM').''.$filledZero;	
+		return $fullRunningNo;
+	}
+
+    public function getSellerRTNumber(String $ymd){ //Seller receipt only when paid up
+		$now = Carbon::parse($ymd);
+		$yearMonth = $now->copy()->isoFormat('YYYYMM');
+        
+		$latestRecord = ScfReceiveAmountHistory::whereNotNull('seller_receipt_number')->where('seller_receipt_number','like','%'.$yearMonth.'%')->get()->last();
+		//return $latestRecord;
+        if(is_null($latestRecord)){
+            $runningNo = 1;
+            //return 1;
+        }
+		else if(Carbon::parse($latestRecord->receive_ymd)->isoFormat('YYYYMM') != $yearMonth){
+			$runningNo = 1;
+            //return 2;
+		}else{
+			$runningNo = intval(substr($latestRecord->seller_receipt_number,-3))+1;
+            //return 3;
+		}
+
+		$filledZero = sprintf('%03d', $runningNo);;
+		$fullRunningNo = 'SCGI'.$now->copy()->isoFormat('YYYYMM').''.$filledZero;	
+		return $fullRunningNo;
+	}
 }

@@ -20,7 +20,9 @@ class ScfReceiveAmountHistory extends Model
         'net_pay_amount',
         'paid_up_ymd',
         'deleted_user_id',
-        'delete_reasons'
+        'delete_reasons',
+        'seller_receipt_number',
+        'buyer_receipt_number'
     ];
     
     public function order(){

@@ -90,7 +90,7 @@
                     <tr>
                         @for($i=0;$i < 22;$i++) <td></td> @endfor
                         <td colspan='3' style='text-align:left'>เลขที่ (No)</td>
-                        <td style='text-align:left'>receipt_no</td>
+                        <td style='text-align:left'>{{$record->buyer_receipt_number}}</td>
                     </tr>
                     <tr>
                         @for($i=0;$i < 22;$i++) <td></td> @endfor

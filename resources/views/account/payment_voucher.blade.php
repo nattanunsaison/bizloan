@@ -88,12 +88,12 @@
                     <tr>
                         @for($i=0;$i < 17;$i++) <td style='color:white'>x</td> @endfor
                         <td colspan='6' style='text-align:left'>Reference PO No.</td>
-                        <td style='text-align:left'>receipt_no</td>
+                        <td style='text-align:left'>{{$record->buyer_receipt_number}}</td>
                     </tr>
                     <tr>
                         @for($i=0;$i < 17;$i++) <td style='color:white'>x</td> @endfor
                         <td colspan='6' style='text-align:left'>PV No.</td>
-                        <td style='text-align:left'>receipt_no</td>
+                        <td style='text-align:left'>PC-{{Str::substr($record->buyer_receipt_number,6,20)}}</td>
                     </tr>
                     <tr>
                         @for($i=0;$i < 17;$i++) <td style='color:white'>x</td> @endfor

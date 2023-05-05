@@ -57,14 +57,20 @@
                         }
                         else{
                             $delay_penalty_and_interest = $order->receive_records->last()->receive_amount_detail->delayPenalty();
+                            $outstanding_i =$order->receive_records->last()->receive_amount_detail->interest;
+                            $outstanding_d = $order->receive_records->last()->receive_amount_detail->late_charge;
+                            //echo "outstanding_i:$outstanding_i,outstanding_d:$outstanding_d<br>";
                             foreach($order->receive_records as $record){
                                 $receive_amount_detail = $record->receive_amount_detail;
                                 $paid_principal += $receive_amount_detail->paid_principal;
-                                $paid_interest += $receive_amount_detail->paid_interest;
-                                $paid_delay_penalty += $receive_amount_detail->paid_late_charge;
-                                $outstanding_interest += $receive_amount_detail->interest - $receive_amount_detail->paid_interest - $receive_amount_detail->waive_interest;
-                                $outstanding_delay_penalty += $receive_amount_detail->late_charge - $receive_amount_detail->paid_late_charge - $receive_amount_detail->waive_late_charge;
+                                $paid_interest += $receive_amount_detail->paid_interest - $receive_amount_detail->waive_interest;
+                                $paid_delay_penalty += $receive_amount_detail->paid_late_charge - $receive_amount_detail->waive_late_charge;
+                                //$outstanding_interest += $receive_amount_detail->interest - $receive_amount_detail->paid_interest - $receive_amount_detail->waive_interest;
+                                //$outstanding_delay_penalty += $receive_amount_detail->late_charge - $receive_amount_detail->paid_late_charge - $receive_amount_detail->waive_late_charge;
+                                //echo "interest: $receive_amount_detail->interest, paid_interest: $paid_interest <br>";
                             }
+                            $outstanding_interest = $outstanding_i - $paid_interest;
+                            $outstanding_delay_penalty = $outstanding_d- $paid_delay_penalty;
                             $last_receive_detail = $order->receive_records->last()->receive_amount_detail;
                             $outstanding_principal = $last_receive_detail->principal - $last_receive_detail->paid_principal ;
                             $outstanding_balance = $outstanding_principal + $outstanding_interest + $outstanding_delay_penalty;
@@ -324,14 +330,20 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
                             }
                             else{
                                 $delay_penalty_and_interest = $order->receive_records->last()->receive_amount_detail->delayPenalty();
+                                $outstanding_i =$order->receive_records->last()->receive_amount_detail->interest;
+                                $outstanding_d = $order->receive_records->last()->receive_amount_detail->late_charge;
+                                //echo "outstanding_i:$outstanding_i,outstanding_d:$outstanding_d<br>";
                                 foreach($order->receive_records as $record){
                                     $receive_amount_detail = $record->receive_amount_detail;
                                     $paid_principal += $receive_amount_detail->paid_principal;
-                                    $paid_interest += $receive_amount_detail->paid_interest;
-                                    $paid_delay_penalty += $receive_amount_detail->paid_late_charge;
-                                    $outstanding_interest += $receive_amount_detail->interest - $receive_amount_detail->paid_interest;
-                                    $outstanding_delay_penalty += $receive_amount_detail->late_charge - $receive_amount_detail->paid_late_charge;
+                                    $paid_interest += $receive_amount_detail->paid_interest - $receive_amount_detail->waive_interest;
+                                    $paid_delay_penalty += $receive_amount_detail->paid_late_charge - $receive_amount_detail->waive_late_charge;
+                                    //$outstanding_interest += $receive_amount_detail->interest - $receive_amount_detail->paid_interest - $receive_amount_detail->waive_interest;
+                                    //$outstanding_delay_penalty += $receive_amount_detail->late_charge - $receive_amount_detail->paid_late_charge - $receive_amount_detail->waive_late_charge;
+                                    //echo "interest: $receive_amount_detail->interest, paid_interest: $paid_interest <br>";
                                 }
+                                $outstanding_interest = $outstanding_i - $paid_interest;
+                                $outstanding_delay_penalty = $outstanding_d- $paid_delay_penalty;
                                 $last_receive_detail = $order->receive_records->last()->receive_amount_detail;
                                 $outstanding_principal = $last_receive_detail->principal - $last_receive_detail->paid_principal ;
                                 $outstanding_balance = $outstanding_principal + $outstanding_interest + $outstanding_delay_penalty;
@@ -507,14 +519,20 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
                         }
                         else{
                             $delay_penalty_and_interest = $order->receive_records->last()->receive_amount_detail->delayPenalty();
+                            $outstanding_i =$order->receive_records->last()->receive_amount_detail->interest;
+                            $outstanding_d = $order->receive_records->last()->receive_amount_detail->late_charge;
+                            //echo "outstanding_i:$outstanding_i,outstanding_d:$outstanding_d<br>";
                             foreach($order->receive_records as $record){
                                 $receive_amount_detail = $record->receive_amount_detail;
                                 $paid_principal += $receive_amount_detail->paid_principal;
-                                $paid_interest += $receive_amount_detail->paid_interest;
-                                $paid_delay_penalty += $receive_amount_detail->paid_late_charge;
-                                $outstanding_interest += $receive_amount_detail->interest - $receive_amount_detail->paid_interest - $receive_amount_detail->waive_interest;
-                                $outstanding_delay_penalty += $receive_amount_detail->late_charge - $receive_amount_detail->paid_late_charge - $receive_amount_detail->waive_late_charge;
+                                $paid_interest += $receive_amount_detail->paid_interest - $receive_amount_detail->waive_interest;
+                                $paid_delay_penalty += $receive_amount_detail->paid_late_charge - $receive_amount_detail->waive_late_charge;
+                                //$outstanding_interest += $receive_amount_detail->interest - $receive_amount_detail->paid_interest - $receive_amount_detail->waive_interest;
+                                //$outstanding_delay_penalty += $receive_amount_detail->late_charge - $receive_amount_detail->paid_late_charge - $receive_amount_detail->waive_late_charge;
+                                //echo "interest: $receive_amount_detail->interest, paid_interest: $paid_interest <br>";
                             }
+                            $outstanding_interest = $outstanding_i - $paid_interest;
+                            $outstanding_delay_penalty = $outstanding_d- $paid_delay_penalty;
                             $last_receive_detail = $order->receive_records->last()->receive_amount_detail;
                             $outstanding_principal = $last_receive_detail->principal - $last_receive_detail->paid_principal ;
                             $outstanding_balance = $outstanding_principal + $outstanding_interest + $outstanding_delay_penalty;
@@ -992,12 +1010,13 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
         outstanding_balance = outstanding
         payback_amount = 0
         if(receive_amount <= delay_penalty ){
+            console.log('scenario  1')
             $("[id='delay_penalty_to_pay']").html(maxFracNF.format(receive_amount))
             fd.append('delay_penalty_to_pay',String(receive_amount))
             $("[id='payback_amount_to_supplier']").addClass('text-green-700').html(maxFracNF.format(0))
             fd.append('payback_amount_to_supplier','0')
             $("[id='principal_to_pay']").html(maxFracNF.format(0))
-            $("[id='principal_balance']").html(maxFracNF.format(0))
+            $("[id='principal_balance']").html(maxFracNF.format(outstanding_balance))
             
             if(receive_amount > outstanding_delay_penalty){
                 $("[id='receive_scenario']").html('1.1')
@@ -1010,8 +1029,8 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
                 $("[id='delay_penalty_balance']").html(maxFracNF.format(this_period_delay_penalty_balance))
                 
                 
-                //$("[id='interest_to_pay']").html(maxFracNF.format(cal_interest.interest_to_pay))
-                fd.append('interest_to_pay',String(cal_interest_value.interest_to_pay))
+                $("[id='interest_to_pay']").html(zero)
+                fd.append('interest_to_pay',String(0))
                 //$("[id='outstanding_interest_to_pay']").html(maxFracNF.format(0))
                 //$("[id='this_period_interest_to_pay']").html(maxFracNF.format(0))
                 //$("[id='interest_balance']").html(maxFracNF.format(cal_interest.interest_balance))
@@ -1023,7 +1042,7 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
                 fd.append('tax_to_pay',String(0))
                 $("[id='outstanding_balance']").addClass('text-red-700').html(maxFracNF.format(outstanding_balance))
                 $("[id='exceeded_amount']").addClass('text-red-700').html(maxFracNF.format(0))
-                fd.append('outstanding_balance',String(outstanding_balance))
+                fd.append('outstanding_principal',String(outstanding_balance))
             }else{
                 $("[id='receive_scenario']").html('1.2')
                 $("[id='outstanding_delay_penalty_to_pay']").html(maxFracNF.format(receive_amount))
@@ -1041,8 +1060,9 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
         }
 
         //2 less than delay penalty + interest
-        console.log('(receive_amount %f > delay_penalty %f && receive_amount %f <= delay_penalty %f + cal_interest %f',receive_amount,delay_penalty,receive_amount,delay_penalty,cal_interest)
+        console.log('2 receive_amount %f > delay_penalty %f && receive_amount %f <= delay_penalty %f + cal_interest %f',receive_amount,delay_penalty,receive_amount,delay_penalty,cal_interest)
         if(receive_amount > delay_penalty && receive_amount <= delay_penalty + cal_interest){
+            console.log('scenario  2')
             $("[id='principal_to_pay']").html(maxFracNF.format(0))
             $("[id='principal_balance']").html(maxFracNF.format(0))
             //$("[id='outstanding_delay_penalty_to_pay']").html(maxFracNF.format(outstanding_delay_penalty))
@@ -1052,6 +1072,9 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
             //$("[id='delay_penalty_balance']").html(maxFracNF.format(0))
             //$("[id='delay_penalty_to_pay']").html(maxFracNF.format(delay_penalty))
             fd.append('delay_penalty_to_pay',String(delay_penalty))
+            $("[id='delay_penalty_balance']").html(zero)
+            $("[id='outstanding_delay_penalty_balance']").html(zero)
+            $("[id='this_period_delay_penalty_balance']").html(zero)
             interest_to_pay = receive_amount - delay_penalty
             $("[id='interest_to_pay']").html(maxFracNF.format(interest_to_pay))
             fd.append('interest_to_pay',String(interest_to_pay))
@@ -1060,6 +1083,7 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
             fd.append('tax_to_pay',String(Math.floor(tax*100)/100))
             $("[id='payback_amount_to_supplier']").addClass('text-green-700').html(maxFracNF.format(0))
             fd.append('payback_amount_to_supplier','0')
+            console.log('receive_amount %d> delay_penalty %d + outstanding_interest %d',receive_amount ,delay_penalty,outstanding_interest)
             if(receive_amount > delay_penalty + outstanding_interest){
                 $("[id='receive_scenario']").html('2.1')
                 $("[id='outstanding_interest_to_pay']").html(maxFracNF.format(outstanding_interest))
@@ -1075,9 +1099,7 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
                 $("[id='this_time_outstanding']").html(maxFracNF.format(outstanding - (receive_amount - delay_penalty - cal_interest)))
                 fd.append('outstanding_principal',String(outstanding))
                 $("[id='this_time_interest_plus_delay_penalty']").html(maxFracNF.format(this_period_interest_balance))
-                $("[id='delay_penalty_balance']").html(zero)
-                $("[id='outstanding_delay_penalty_balance']").html(zero)
-                $("[id='this_period_delay_penalty_balance']").html(zero)
+                
                 $("[id='exceeded_amount']").addClass('text-red-700').html(zero)
             }else{
                 $("[id='receive_scenario']").html('2.2')
@@ -1098,7 +1120,9 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
         }
 
         //3 more than delay penalty + interest 
+        console.log('3 receive_amount %d > delay_penalty %d+ cal_interest %d',receive_amount,delay_penalty,cal_interest)
         if(receive_amount > delay_penalty + cal_interest){
+            console.log('scenario  3')
             $("[id='receive_scenario']").html(3)
             $("[id='outstanding_interest_to_pay']").html(maxFracNF.format(outstanding_interest))
             $("[id='this_period_interest_to_pay']").html(maxFracNF.format(this_period_interest))
@@ -1136,8 +1160,11 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
         }
 
         //4 less than delay penalty + interest + outstanding
+        console.log('4 receive_amount %d > cal_interest %d + delay_penalty %d && receive_amount %d <= outstanding %d + cal_interest %d+ delay_penalty %d',
+        receive_amount,cal_interest,delay_penalty,receive_amount, outstanding,cal_interest, delay_penalty)
         if(receive_amount > cal_interest + delay_penalty && receive_amount <= outstanding + cal_interest + delay_penalty){
-            $("[id='receive_scenario']").html(4)
+            console.log('scenario  4')
+            $("[id='receive_scenario']").html(44)
             $("[id='delay_penalty_to_pay']").html(maxFracNF.format(delay_penalty))
             fd.append('delay_penalty_to_pay',String(delay_penalty))
             $("[id='interest_to_pay']").html(maxFracNF.format(cal_interest))
@@ -1148,7 +1175,9 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
             payback_amount = 0
             $("[id='payback_amount_to_supplier']").addClass('text-green-700').html(maxFracNF.format(payback_amount))
             fd.append('payback_amount_to_supplier',String(payback_amount))
-            outstanding_balance = outstanding - receive_amount
+            balance = receive_amount - delay_penalty - cal_interest
+            outstanding_balance = outstanding - balance
+            console.log('outstanding_balance %d = outstanding %d - receive_amount %d',outstanding_balance,outstanding,receive_amount)
             $("[id='outstanding_balance']").addClass('text-red-700').html(maxFracNF.format(outstanding_balance))
             fd.append('outstanding_principal',String(outstanding_balance))
             $("[id='exceeded_amount']").addClass('text-red-700').html(zero)
@@ -1157,6 +1186,7 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
 
         //5 more than delay penalty + interest + outstanding
         if(receive_amount > outstanding + cal_interest + delay_penalty){
+            console.log('scenario  5')
             $("[id='receive_scenario']").html(5)
             $("[id='delay_penalty_to_pay']").html(maxFracNF.format(delay_penalty))
             fd.append('delay_penalty_to_pay',String(delay_penalty))
@@ -1181,6 +1211,7 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
 
         //6 receive_amount = outstanding + delay_penalty + interest
         if(receive_amount == outstanding && delay_penalty + cal_interest < ten_percent_buffer){
+            console.log('scenario  6')
             $("[id='receive_scenario']").html(6)
             $("[id='delay_penalty_to_pay']").html(maxFracNF.format(delay_penalty))
             fd.append('delay_penalty_to_pay',String(delay_penalty))
@@ -1232,10 +1263,10 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
             success: function(data){
                 //processing_modal.hide()
                 console.log(data)
-                window.location = '{{url('/unpaidup_orders')}}'
+                //window.location = '{{url('/unpaidup_orders')}}'
             },
             error: function(err){
-                console.log(err)
+                alert(err)
             }
         })
     }
