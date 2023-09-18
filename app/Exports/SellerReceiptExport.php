@@ -95,7 +95,7 @@ class SellerReceiptExport implements FromView,WithDrawings,WithTitle,WithEvents,
         $workSheet->getStyle("E12:AC12")->applyFromArray($styleArray);
 
         //Address
-        $workSheet->getStyle("W11:AA11")->applyFromArray($styleArray);
+        $workSheet->getStyle("W11:Z11")->applyFromArray($styleArray);
 
         $workSheet->getStyle("A30:AC30")->applyFromArray($styleArray);
 
@@ -163,6 +163,8 @@ class SellerReceiptExport implements FromView,WithDrawings,WithTitle,WithEvents,
         $workSheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(13,13);
         $workSheet->getPageMargins()->setTop(0.5);
         $workSheet->getStyle('A3')->getAlignment()->setWrapText(false);
+        $workSheet->getStyle('E25:H25')->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        $workSheet->getStyle('E30:H30')->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $workSheet->getStyle('E15:AC15')->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $workSheet->getStyle('E23')->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $workSheet->getStyle('Y13:Y38')->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);

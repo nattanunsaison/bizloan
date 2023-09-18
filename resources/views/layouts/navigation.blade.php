@@ -41,14 +41,14 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('summary.dealer')" :active="request()->routeIs('summary.dealer')">
-                        {{ __('Buyers') }}
+                        {{ __('Sellers') }}
                     </x-nav-link>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('summary.contractor')" :active="request()->routeIs('summary.contractor')">
-                        {{ __('Suppliers') }}
+                        {{ __('Buyers') }}
                     </x-nav-link>
                 </div>
 

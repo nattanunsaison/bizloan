@@ -10,8 +10,8 @@ enum ContractorStatus: int
     public function labels(): string
     {
         return match ($this) {
-            self::Active         => __('words.Active'),
-            self::Inactive       => __('words.Inactive'),
+            self::Active         => __('Active'),
+            self::Inactive       => __('Inactive'),
         };
     }
 

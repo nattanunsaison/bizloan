@@ -1,5 +1,8 @@
 <x-app-layout>
-    @section('title', __('Suppliers'))
+    @section('title', __('Buyers'))
+    @php 
+        $last_path = request()->segment(count(request()->segments()));
+    @endphp
     <div class="py-12">
         <div class="max-w-full mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden text-sm shadow-sm sm:rounded-lg p-2">
@@ -14,7 +17,7 @@
                             <th rowspan ='2'>Current credit limit</th>
                             <th rowspan ='2'>Purchase amount</th>
                             <th rowspan ='2'>Available balance</th>
-                            <th rowspan ='2'>Active dealers</th>
+                            <th rowspan ='2'>Active sellers</th>
                         </tr>
                         <tr>
                             <th>Th</th>
@@ -24,7 +27,8 @@
                     <tbody>
                         @foreach($contractors as $contractor)
                             @php 
-                                $limit_amount = $contractor->eligibilities()->orderBy('id','desc')->first()->limit_amount;
+                                $limit_amount = $contractor->eligibilities()->orderBy('id','desc')->first() ? 
+                                            $contractor->eligibilities()->orderBy('id','desc')->first()->limit_amount : 0;
                                 $used_amount = $contractor->orders()->whereNull('paid_up_ymd')->sum('purchase_amount');
                                 $balance = $limit_amount - $used_amount;
                             @endphp
@@ -79,11 +83,11 @@
                 buttons: [
                     {
                         extend: 'csvHtml5',
-                        title: "supplier_list_-{{\Carbon\Carbon::now()->isoFormat('YYYYMMDD-hhmm')}}"
+                        title: "{{$last_path}}_list_-{{\Carbon\Carbon::now()->isoFormat('YYYYMMDD-hhmm')}}"
                     },
                     {
                         extend: 'excelHtml5',
-                        title: "supplier_list_-{{\Carbon\Carbon::now()->isoFormat('YYYYMMDD-hhmm')}}"
+                        title: "{{$last_path}}_list_-{{\Carbon\Carbon::now()->isoFormat('YYYYMMDD-hhmm')}}"
                     },
                 ]
             });

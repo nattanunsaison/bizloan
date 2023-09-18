@@ -101,7 +101,8 @@
                         <td colspan='3' style='text-align:left'>ชื่อ (Name)</td>
                         <td colspan='12' style='text-align:left'>{{$contractor->th_company_name}}</td>
                         <td colspan='7' style='text-align:left'>เลขประจำตัวผู้เสียภาษี (Tax ID)</td>
-                        <td colspan='5' style='text-align:left'>{{$contractor->tax_id}}</td>
+                        <td colspan='4' style='text-align:left'>{{$contractor->tax_id}}</td>
+                        <td colspan='3' style='text-align:left'>สาขา: xxx</td>
                     </tr>
                     <tr>
                         <td colspan='4' style='text-align:left'>ที่อยู่ (Address)</td>

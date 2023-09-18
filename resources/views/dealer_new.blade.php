@@ -1,5 +1,8 @@
 <x-app-layout>
-    @section('title', __('Buyers'))
+    @section('title', __('Sellers'))
+    @php 
+        $last_path = request()->segment(count(request()->segments()));
+    @endphp
     <head>
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -28,7 +31,7 @@
                                 <th rowspan='2' class='text-center'>Bank account</th>
                                 <th rowspan='2'>Registered at</th>
                                 <th rowspan='2'>Net input amount[THB]</th>
-                                <th rowspan='2'>Purchasing contractors</th>
+                                <th rowspan='2'>Purchasing buyers</th>
                             </tr>
                             <tr>
                                 <th class='text-center'>TH</th>
@@ -80,11 +83,11 @@
 			buttons: [
 				{
 					extend: 'csvHtml5',
-					title: "dealer_summary_{{\Carbon\Carbon::now()->isoFormat('YYYYMMDD-hhmm')}}"
+					title: "{{$last_path}}_list_{{\Carbon\Carbon::now()->isoFormat('YYYYMMDD-hhmm')}}"
 				},
 				{
 					extend: 'excelHtml5',
-					title: "dealer_summary_{{\Carbon\Carbon::now()->isoFormat('YYYYMMDD-hhmm')}}"
+					title: "{{$last_path}}_list_{{\Carbon\Carbon::now()->isoFormat('YYYYMMDD-hhmm')}}"
 				},
 			]
         });

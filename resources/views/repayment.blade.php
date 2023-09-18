@@ -35,10 +35,28 @@
                     <div class='font-bold'>Input date</div>
                     <div class='col-span-1'>{{\Carbon\Carbon::parse($order->input_ymd)->isoFormat('DD MMMM YYYY')}}</div>
                     <div class='font-bold'>Due date</div>
-                    <div class='col-span-3'>{{\Carbon\Carbon::parse($order->installments->first()->due_ymd)->isoFormat('DD MMMM YYYY')}}</div>
-                    <div class='font-bold'>Amount</div>
+                    <div class='col-span-1'>{{\Carbon\Carbon::parse($order->installments->first()->due_ymd)->isoFormat('DD MMMM YYYY')}}</div>
+                    @php  
+                        if(count($order->receive_records)==0){
+                            $delay_penalty_and_interest = $order->installments->first()->delayPenalty();  
+                        }
+                        else{
+                            $delay_penalty_and_interest = $order->receive_records->last()->receive_amount_detail->delayPenalty();
+                        }
+                        $date_diff_from_last_due = $delay_penalty_and_interest['date_diff_from_last_due'];
+                        $date_diff_from_due = $delay_penalty_and_interest['date_diff_from_due'];
+                    @endphp
+                    <div class='font-bold'>Days from input date</div>
+                    <div class='col-span-1' id='date_diff_from_last_due'>{{number_format($date_diff_from_last_due)}}</div>
+                    <div class='font-bold'>Days from due</div>
+                    <div class='col-span-1' id='date_diff_from_due'>{{number_format($date_diff_from_due)}}</div>
+                    <div class='col-span-2'></div>
+                    <div class='font-bold'>Principal 100%</div>
                     <div class='text-xl text-right'>{{number_format($order->purchase_amount,2)}}</div>
-                    <div class='col-span-2'>xxx</div>
+                    <div class='col-span-2'></div>
+                    <div class='font-bold'>Principal 10%</div>
+                    <div class='text-xl text-right'>{{number_format($order->purchase_amount*0.1,2)}}</div>
+                    <div class='col-span-2'></div>
                     @php
                         $paid_principal = 0;
                         $paid_interest = 0;
@@ -52,11 +70,11 @@
                         $this_period_interest = 0;
                         $this_period_delay_penalty=0;
                         if(count($order->receive_records)==0){
-                            $delay_penalty_and_interest = $order->installments->first()->delayPenalty();
+                            //$delay_penalty_and_interest = $order->installments->first()->delayPenalty();
                             $outstanding_balance = $order->purchase_amount;   
                         }
                         else{
-                            $delay_penalty_and_interest = $order->receive_records->last()->receive_amount_detail->delayPenalty();
+                            //$delay_penalty_and_interest = $order->receive_records->last()->receive_amount_detail->delayPenalty();
                             $outstanding_i =$order->receive_records->last()->receive_amount_detail->interest;
                             $outstanding_d = $order->receive_records->last()->receive_amount_detail->late_charge;
                             //echo "outstanding_i:$outstanding_i,outstanding_d:$outstanding_d<br>";
@@ -83,16 +101,16 @@
                     @endphp
                     <div class='font-bold'>Outstanding balance</div>
                     <div class='col-span-1 text-xl text-right' id='carry_over_outstanding_balance'>{{number_format($outstanding_balance,2)}}</div>
-                    <div class='col-span-2'>xxx</div>
+                    <div class='col-span-2'></div>
                     <div class='col-span-1 indent-8'>Outstanding Principal: </div>
                     <div class='col-span-1 text-right' id='outstanding_principal'>{{number_format($outstanding_principal,2)}}</div>
-                    <div class='col-span-2'>xxx</div>
+                    <div class='col-span-2'></div>
                     <div class='col-span-1 indent-8'>Outstanding Interest: </div>
                     <div class='col-span-1 text-right' id='carry_over_interest'> {{number_format($outstanding_interest,2)}}</div>
-                    <div class='col-span-2'>xxx</div>
+                    <div class='col-span-2'></div>
                     <div class='col-span-1 indent-8'>Outstanding Delay Penalty: </div> 
                     <div class='col-span-1 text-right' id='carry_over_delay_penalty'>{{number_format($outstanding_delay_penalty,2)}}</div>
-                    <div class='col-span-2'>xxx</div>
+                    <div class='col-span-2'></div>
                     <div class='font-bold'>Interest</div>
                     <div class='col-span-1 text-right text-xl' id='total_interest'>{{number_format($total_interest,2)}}</div>
                     <div class='col-span-2 pl-8'>
@@ -191,19 +209,19 @@
                     </div>
                     <div class='font-bold'>Partially received amount</div>
                     <div class='col-span-1 text-right text-xl' id='paid_total'>{{$order->receive_records ? number_format($order->receive_records->sum('receive_amount'),2) : 0.00}}</div>
-                    <div class='col-span-2'>xxx</div>
+                    <div class='col-span-2'></div>
                     <div class='col-span-1 indent-8'>Paid Principal: </div>
                     <div class='col-span-1 text-right' id='paid_principal'>{{number_format($paid_principal,2)}}</div>
-                    <div class='col-span-2'>xxx</div>
+                    <div class='col-span-2'></div>
                     <div class='col-span-1 indent-8'>Paid Interest: </div>
                     <div class='col-span-1 text-right' id='paid_interest'> {{number_format($paid_interest,2)}}</div>
-                    <div class='col-span-2'>xxx</div>
+                    <div class='col-span-2'></div>
                     <div class='col-span-1 indent-8'>Paid Delay Penalty: </div> 
                     <div class='col-span-1 text-right' id='paid_delay_penalty'>{{number_format($paid_delay_penalty,2)}}</div>
-                    <div class='col-span-2'>xxx</div>
+                    <div class='col-span-2'></div>
                     <div class='font-bold'>Partially paidback amount to supplier</div>
                     <div class='col-span-1 text-right text-xl' id='paidback_amount'>{{$order->receive_records ? number_format($order->receive_records->sum('net_pay_amount'),2) : 0.00}}</div>
-                    <div class='col-span-2'>xxx</div>
+                    <div class='col-span-2'></div>
                     <div class='font-bold'>Partially received dates</div>
                     <div class='col-span-3'>
                         @if(count($order->receive_records)!=0)
@@ -264,9 +282,9 @@
 <x-alert>Receive amount cannot be 0!</x-alert>
 <x-processing></x-processing>
 
-<script src="https://cdn.jsdelivr.net/npm/autonumeric@4.5.4"></script>
+<script src="https://cdn.jsdelivr.net/npm/autonumeric@4.6.2"></script>
 <script>
-new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalCharCommaSeparator);
+    new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalCharCommaSeparator);
 </script>
 
 <!-- Main modal -->
@@ -385,7 +403,7 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
                         <div class='font-bold'>Tax</div>
                         @php 
                             $tax =  $total_interest*0.01;
-                            $tax_format = floor($tax*100)/100;
+                            $tax_format = round($tax*100,2);
                         @endphp
                         <div class='col-span-1 text-xl text-right' id='tax'>{{number_format($tax_format,2)}}</div>
                         <div class='font-bold border-l-4 border-indigo-500 pl-2'>Tax to pay</div>
@@ -459,6 +477,7 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
                     type="button"
                     class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
                     data-te-modal-dismiss
+                    onclick='closeMainModal()'
                     aria-label="Close">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -490,12 +509,20 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
                     <!-- Receive date-->
                     <div class='font-bold'>Receive date</div>
                     <div class='col-span-1' id='receive_date_to_confirm'>{{\Carbon\Carbon::now()->isoFormat('DD MMMM YYYY')}}</div>
+                    <!-- Principal-->
+                    <div class='font-bold'>Principal 100%</div>
+                    <div class='col-span-1 text-xl text-right'>{{number_format($order->purchase_amount,2)}}</div>
                     <!-- Receive amount-->
-                    <div class='font-bold'>Amount to receive</div>
-                    <div class='col-span-4 text-xl text-center' id='receive_amount_to_confirm'>xxx</div>
+                    <div class='font-bold pl-3'>Amount to receive</div>
+                    <div class='col-span-1 text-xl text-center' id='receive_amount_to_confirm'>xxx</div>
+                    <div class='col-span-1 text-xl text-center'></div>
+                    <!-- Receive amount-->
+                    <div class='font-bold'>Principal 10%</div>
+                    <div class='col-span-1 text-xl text-right'>{{number_format($order->purchase_amount*0.1,2)}}</div>
+                    
                     <!--  Receive comment -->
-                    <div class='font-bold'>Receive comment</div>
-                    <div class='col-span-4' id='receive_comment_to_confirm'>xxx</div>
+                    <div class='font-bold pl-3'>Receive comment</div>
+                    <div class='col-span-2' id='receive_comment_to_confirm'>xxx</div>
                     <div class='font-bold '>Amount</div>
                     <div class='text-xl text-right'>{{number_format($order->purchase_amount,2)}}</div>
                     <div class='font-bold border-l-4 border-indigo-500 pl-2'>Partially received amount</div>
@@ -555,31 +582,6 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
                     <div class='col-span-1 text-xl text-right' id='principal_to_pay'>xxx</div>
                     <div class='col-span-1 text-xl text-right' id='principal_balance'>xxx</div>
                     <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700 col-span-5">
-                    <div class='font-bold'>Interest</div>
-                    <div class='col-span-1 text-xl text-right' id='total_interest'>{{number_format($total_interest,2)}}</div>
-                    <div class='font-bold border-l-4 border-indigo-500 pl-2'>Interest to pay</div>
-                    <div class='col-span-1 text-xl text-right' id='interest_to_pay'>xxx</div>
-                    <div id='interest_balance' class='text-right text-xl'>xxxx</div>
-                    <div class='pl-2 indent-4'>Outstanding interest</div>
-                    <div class='text-right' id='outstanding_interest'>{{number_format($outstanding_interest,2)}}</div>
-                    <div class='border-l-4 border-indigo-500 pl-2 indent-4'>Outstanding interest to pay</div>
-                    <div class='text-right' id='outstanding_interest_to_pay'></div>
-                    <div id='outstanding_interest_balance' class='text-right'>xxxx</div>
-                    <div class='pl-2 indent-4'>This period interest</div>
-                    <div class='text-right' id='interest'>{{number_format($this_period_interest,2)}}</div>
-                    <div class='border-l-4 border-indigo-500 pl-2 indent-4'>This period interest to pay</div>
-                    <div class='text-right' id='this_period_interest_to_pay'></div>
-                    <div id='this_period_interest_balance' class='text-right'>xxxx</div>
-                    <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700 col-span-5">
-                    <div class='font-bold'>Tax</div>
-                    @php 
-                        $tax =  $total_interest*0.01;
-                        $tax_format = floor($tax*100)/100;
-                    @endphp
-                    <div class='col-span-1 text-xl text-right' id='tax'>{{number_format($tax_format,2)}}</div>
-                    <div class='font-bold border-l-4 border-indigo-500 pl-2'>Tax to pay</div>
-                    <div class='col-span-1 text-xl text-right' id='tax_to_pay'>xxx</div>
-                    <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700 col-span-5">
                     <div class='font-bold'>Delay penalty</div>
                     <div class='col-span-1 text-xl text-right' id='total_delay_penalty'>{{number_format($total_delay_penalty,2)}}</div>
                     <div class='font-bold border-l-4 border-indigo-500 pl-2'>Delay penalty to pay</div>
@@ -596,10 +598,37 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
                     <div class='text-right' id='this_period_delay_penalty_to_pay'></div>
                     <div class='text-right' id='this_period_delay_penalty_balance'>xxx</div>
                     <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700 col-span-5">
+                    <div class='font-bold'>Interest</div>
+                    <div class='col-span-1 text-xl text-right' id='total_interest'>{{number_format($total_interest,2)}}</div>
+                    <div class='font-bold border-l-4 border-indigo-500 pl-2'>Interest to pay</div>
+                    <div class='col-span-1 text-xl text-right' id='interest_to_pay'>xxx</div>
+                    <div id='interest_balance' class='text-right text-xl'>xxxx</div>
+                    <div class='pl-2 indent-4'>Outstanding interest</div>
+                    <div class='text-right' id='outstanding_interest'>{{number_format($outstanding_interest,2)}}</div>
+                    <div class='border-l-4 border-indigo-500 pl-2 indent-4'>Outstanding interest to pay</div>
+                    <div class='text-right' id='outstanding_interest_to_pay'></div>
+                    <div id='outstanding_interest_balance' class='text-right'>xxxx</div>
+                    <div class='pl-2 indent-4'>This period interest</div>
+                    <div class='text-right' id='interest'>{{number_format($this_period_interest,2)}}</div>
+                    <div class='border-l-4 border-indigo-500 pl-2 indent-4'>This period interest to pay</div>
+                    <div class='text-right' id='this_period_interest_to_pay'></div>
+                    <div id='this_period_interest_balance' class='text-right'>xxxx</div>
+                    <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700 col-span-5">
                     <div class='font-bold'>Interest + Delay penalty</div>
                     <div class='col-span-1 text-xl text-right' id='interest_plus_delay_penalty'>{{number_format($total_interest + $total_delay_penalty,2)}}</div>
-                    <div class='border-l-4 border-indigo-500 pl-2 font-bold col-span-2'>This time Interest + Delay pelalty</div>
+                    <div class='border-l-4 border-indigo-500 pl-2 font-bold col-span-1'>This time Interest + Delay pelalty</div>
                     <div class='text-right text-xl ' id='this_time_interest_plus_delay_penalty'>xxx</div>
+                    <div class='text-right text-xl ' id='this_time_interest_plus_delay_penalty_balance'>xxx</div>
+                    <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700 col-span-5">
+                    <div class='font-bold'>Tax</div>
+                    @php 
+                        $tax =  $total_interest*0.01;
+                        $tax_format = round($tax,2);
+                    @endphp
+                    <div class='col-span-1 text-xl text-right' id='tax'>{{number_format($tax_format,2)}}</div>
+                    <div class='font-bold border-l-4 border-indigo-500 pl-2'>Tax to pay</div>
+                    <div class='col-span-1 text-xl text-right' id='tax_to_pay'>xxx</div>
+                    <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700 col-span-5">
                     <div class='font-bold'>Carry over outstanding balance</div>
                     <div class='col-span-1 text-xl text-right' id='carry_over_outstanding_balance'>{{number_format($outstanding_balance,2)}}</div>
                     <div class='border-l-4 border-indigo-500 pl-2 font-bold col-span-2'>This time outstanding amount</div>
@@ -617,7 +646,7 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
             <!-- Modal footer -->
             <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
                 <button onclick="confirmRepayment()" data-te-modal-dismiss data-te-ripple-init type="button" class="text-white bg-green-700 hover:bg-green-900 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 font-medium px-5 py-2.5 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Confirm repayment</button>
-                <button onclick="closeModal()" data-te-modal-dismiss type="button" class="text-white bg-gray-700 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 font-medium px-5 py-2.5 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Cancel</button>
+                <button onclick="closeMainModal()" data-te-modal-dismiss type="button" class="text-white bg-gray-700 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 font-medium px-5 py-2.5 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Cancel</button>
             </div>
         </div>
     </div>
@@ -714,14 +743,20 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
                 //console.log('outstanding interest: '+outstanding_interest)
                 //console.log('total interest: '+total_interest)
                 $("[id='total_interest']").html(maxFracNF.format(total_interest))
+                date_diff_from_input = parseInt(data['date_diff_from_input'])
+                $("[id='date_diff_from_last_due']").html(date_diff_from_input.toFixed())
+                date_diff_from_due = parseInt(data['date_diff_from_due'])
+                $("[id='date_diff_from_due']").html(date_diff_from_due.toFixed())
                 tax = total_interest*.01
-                tax_format = Math.floor(tax*100)/100
+                tax_format = tax.toFixed(2)
                 $("[id='tax']").html(maxFracNF.format(tax_format))
                 outstanding_delay_penalty = parseFloat($("[id='outstanding_delay_penalty']").first().text().replace(/,/g, ''))
                 if(!$('#exempt_late_charge').is(':checked')){   
                     total_delay_penalty = data['delay_penalty']+outstanding_delay_penalty
                     $("[id='total_delay_penalty']").html(maxFracNF.format(total_delay_penalty))
                     $("[id='delay_penalty']").html(maxFracNF.format(data['delay_penalty']))
+                    interest_plus_delay_penalty = total_interest + total_delay_penalty
+                    $("[id='interest_plus_delay_penalty']").html(maxFracNF.format(interest_plus_delay_penalty))
                     //console.log('delay penalty: '+data['delay_penalty'])
                 }
                 else{
@@ -776,7 +811,7 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
             tax = parseFloat($("[id='tax']").first().text().replace(/,/g, ''))
             //console.log('Tax:'+tax)
             //console.log('10% purchase amount:'+purchase_amount*0.1)
-            ten_percent_buffer = purchase_amount*0.1
+            ten_percent_buffer = parseFloat((purchase_amount*0.1).toFixed(2))
             cal_delay_penalty = adjustExemptLateChargeUI()
 
             console.log('cal_delay_penalty: '+cal_delay_penalty)
@@ -886,8 +921,9 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
             _outstanding_interest_balance = _outstanding_interest_to_pay
             _this_period_interest_balance = _this_period_interest_to_pay
             $("[id='interest_to_pay']").html($("[id='total_interest']").first().text())
-            $("[id='outstanding_interest_to_pay']").html($("[id='outstanding_interest']").first().text())
-            $("[id='this_period_interest_to_pay']").html($("[id='interest']").first().text())
+            $("[id='outstanding_interest_to_pay']").html('-'+$("[id='outstanding_interest']").first().text())
+            //$("[id='this_period_interest_to_pay']").html('-'+$("[id='interest']").first().text())
+            $("[id='this_period_interest_to_pay']").html('abc')
             $("[id='interest_balance']").html($("[id='total_interest']").first().text())
             $("[id='outstanding_interest_balance']").html($("[id='outstanding_interest']").first().text())
             $("[id='this_period_interest_balance']").html($("[id='interest']").first().text())
@@ -932,12 +968,12 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
             _delay_penalty_balance = _delay_penalty_to_pay
             _outstanding_delay_penalty_balance = _outstanding_delay_penalty_to_pay
             _this_period_delay_penalty_balance = _this_period_delay_penalty_to_pay
-            $("[id='delay_penalty_to_pay']").html($("[id='total_delay_penalty']").first().text())
-            $("[id='outstanding_delay_penalty_to_pay']").html($("[id='outstanding_delay_penalty']").first().text())
-            $("[id='this_period_delay_penalty_to_pay']").html($("[id='delay_penalty']").first().text())
+            $("[id='delay_penalty_to_pay']").html('-'+$("[id='total_delay_penalty']").first().text())
+            $("[id='outstanding_delay_penalty_to_pay']").html('-'+$("[id='outstanding_delay_penalty']").first().text())
+            $("[id='this_period_delay_penalty_to_pay']").html('-'+$("[id='delay_penalty']").first().text())
             $("[id='delay_penalty_balance']").html($("[id='total_delay_penalty']").first().text())
-            $("[id='outstanding_delay_penalty_balance']").html($("[id='outstanding_delay_penalty']").first().text())
-            $("[id='this_period_delay_penalty_balance']").html($("[id='delay_penalty']").first().text())
+            $("[id='outstanding_delay_penalty_balance']").html('-'+$("[id='outstanding_delay_penalty']").first().text())
+            $("[id='this_period_delay_penalty_balance']").html('-'+$("[id='delay_penalty']").first().text())
         }
         
         return {
@@ -964,6 +1000,10 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
 
     function closeModal(){
         modal.hide();
+    }
+
+    function closeMainModal(){
+        main_modal.hide();
     }
 
     function allocateReceiveAmount(receive_amount,interest_to_pay,delay_penalty,ten_percent_buffer,outstanding,paid_principal){
@@ -1210,21 +1250,30 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
         }
 
         //6 receive_amount = outstanding + delay_penalty + interest
+        console.log('6 receive_amount %d == outstanding %d && delay_penalty %d + cal_interest %d < ten_percent_buffer %d',receive_amount,outstanding,delay_penalty,cal_interest,ten_percent_buffer)
         if(receive_amount == outstanding && delay_penalty + cal_interest < ten_percent_buffer){
             console.log('scenario  6')
             $("[id='receive_scenario']").html(6)
-            $("[id='delay_penalty_to_pay']").html(maxFracNF.format(delay_penalty))
+            $("[id='delay_penalty_to_pay']").html('-'+maxFracNF.format(delay_penalty))
+            $("[id='this_period_delay_penalty_to_pay']").html('-'+maxFracNF.format(this_period_delay_penalty))
+            $("[id='outstanding_delay_penalty_to_pay']").html('-'+maxFracNF.format(outstanding_delay_penalty))
             fd.append('delay_penalty_to_pay',String(delay_penalty))
-            $("[id='interest_to_pay']").html(maxFracNF.format(cal_interest))
-            $("[id='principal_to_pay']").html(maxFracNF.format(outstanding))
+            $("[id='interest_to_pay']").html('-'+maxFracNF.format(cal_interest))
+            $("[id='this_period_interest_to_pay']").html('-'+maxFracNF.format(this_period_interest))
+            $("[id='outstanding_interest_to_pay']").html('-'+maxFracNF.format(outstanding_interest))
+            $("[id='principal_to_pay']").html('-'+maxFracNF.format(outstanding))
+            $("[id='this_time_interest_plus_delay_penalty']").html('-'+maxFracNF.format(cal_interest+delay_penalty))
+            $("[id='this_time_interest_plus_delay_penalty_balance']").html(zero)
+            
             $("[id='principal_balance']").html(zero)
             $("[id='this_time_outstanding']").html(zero)
-            fd.append('interest_to_pay',String(cal_interest))
-            tax = cal_interest*.01
-            $("[id='tax_to_pay']").html(maxFracNF.format(Math.floor(tax*100)/100))
-            fd.append('tax_to_pay',String(Math.floor(tax*100)/100))
-            payback_amount = ten_percent_buffer -delay_penalty - cal_interest + Math.floor(tax*100)/100
-            console.log('ten_percent_buffer: %f,daily_interest:%f,delay_penalty:%f, Math.floor(tax*100)/100:%f,paid_principal:%f',ten_percent_buffer,daily_interest,delay_penalty,Math.floor(tax*100)/100,paid_principal)
+            fd.append('interest_to_pay',String(cal_interest)) 
+            tax = (cal_interest*.01).toFixed(2)
+            console.log('tax: '+tax)
+            $("[id='tax_to_pay']").html(maxFracNF.format(tax)) //
+            fd.append('tax_to_pay',String(tax))
+            payback_amount = ten_percent_buffer -delay_penalty - cal_interest + parseFloat(tax)
+            console.log('ten_percent_buffer: %f,daily_interest:%f,delay_penalty:%f, tax:%f,paid_principal:%f',ten_percent_buffer,daily_interest,delay_penalty,tax,paid_principal)
             $("[id='payback_amount_to_supplier']").addClass('text-green-700').html(maxFracNF.format(payback_amount))
             fd.append('payback_amount_to_supplier',String(payback_amount))
             exceeded_amount = receive_amount - outstanding - cal_interest - delay_penalty
@@ -1233,12 +1282,12 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
             $("[id='exceeded_amount']").addClass('text-red-700').html(zero)
             fd.append('exceeded_amount',String(0))
         }
-        console.log('payback_amount: %f,ten_percent_buffer: %f,daily_interest:%f,delay_penalty:%f, Math.floor(tax*100)/100:%f,paid_principal:%f',payback_amount,ten_percent_buffer,daily_interest,delay_penalty,Math.floor(tax*100)/100,paid_principal)
+        console.log('payback_amount: %f,ten_percent_buffer: %f,daily_interest:%f,delay_penalty:%f, tax:%f,paid_principal:%f',payback_amount,ten_percent_buffer,daily_interest,delay_penalty,Math.floor(tax*100)/100,paid_principal)
         console.log(fd)
     }
 
     function confirmRepayment(){
-        modal.hide()
+        main_modal.hide()
         $("[id='final-confirm-button']").remove()
         $('#general_alert_content').text('This action cannot be undone!')
         confirm_button = `<button id="final-confirm-button" type="button" onclick='finalConfirmRepayment()' class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-400 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">Confirm</button>`
@@ -1263,7 +1312,7 @@ new AutoNumeric('#receive_amount',AutoNumeric.getPredefinedOptions().dotDecimalC
             success: function(data){
                 //processing_modal.hide()
                 console.log(data)
-                //window.location = '{{url('/unpaidup_orders')}}'
+                window.location = '{{url('/unpaidup_orders')}}'
             },
             error: function(err){
                 alert(err)

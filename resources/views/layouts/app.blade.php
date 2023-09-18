@@ -31,8 +31,11 @@
             } 
         </style>
         <!-- Scripts -->
+        {{----}}
         <link href="{{asset('/app-541e4312.css')}}" rel='stylesheet'>
-        {{--@vite(['resources/css/app.css', 'resources/js/app.js'])--}}
+        {{--
+        @vite(['resources/css/app.css', 'resources/js/app.js','resources/js/main.js'])
+        --}}
     </head>
     <body class="antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -53,11 +56,11 @@
             </main>
         </div>
         
+        <!-- Flowbite modal-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.0/flowbite.min.js"></script>
+        
         <!-- Tailwind element -->
         <script src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/tw-elements.umd.min.js"></script>
-
-        <!-- Flowbites JS -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
 
         <!-- Build js -->
         <!--script src="{{asset('/app-60f5163b.js')}}"></script-->

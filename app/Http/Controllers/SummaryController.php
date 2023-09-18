@@ -44,7 +44,7 @@ class SummaryController extends Controller
         //Route::get('/summary/contractor',[SummaryController::class,'summaryContractor']);
         public function summaryContractor(Request $request){
                 $dealers = dealers::query()->where('dealer_type',\App\Enum\DealerType::Transformer->value)->get()->pluck('id');
-                $contractor_ids = order::whereIn('dealer_id',$dealers)->get()->pluck('contractor_id')->unique('contractor_id');
+                $contractor_ids = order::whereIn('dealer_id',$dealers)->get()->unique('contractor_id')->pluck('contractor_id');
                 $contractors = contractors::where('contractors.deleted',0)
                                 ->where('approval_status',\App\Enum\ApprovalStatus::Qualified->value)
                                 ->whereIn('id',$contractor_ids)
@@ -59,7 +59,7 @@ class SummaryController extends Controller
         //Route::get('/summary/dealer',[SummaryController::class,'summaryDealer']);
         public function summaryDealer(Request $request){
                 $dealers = dealers::query()->where('dealer_type',\App\Enum\DealerType::Transformer->value)->get();
-                //return $dealers->skip(1)->first()->orders;
+                //return $dealers;
                 return view('dealer_new')->with('dealers',$dealers);
         }
 

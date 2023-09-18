@@ -43,7 +43,7 @@ class OrderController extends Controller
                     ->whereNotIn('id',$scf_paid_up_orders)
                     ->where('id',request()->order_id)
                     ->get()->first();
-        //return $latest_receive_detail = $order->receive_records->last()->receive_amount_detail->delayPenalty();
+        //return $latest_receive_detail = $order->installments->first()->delayPenalty();
         //return $latest_receive_detail->delayPenalty();
         //return $latest_receive_detail->order;
         //return count($order->receive_records);//->last();
@@ -78,6 +78,7 @@ class OrderController extends Controller
         else
             $exempt_interest = null;
         
+        //return $request->receive_date;
         $buyer_receipt_number = $this->getBuyerRTNumber($request->receive_date);
         $seller_receipt_number = null;
         if($request->outstanding_principal == 0){
@@ -203,10 +204,11 @@ class OrderController extends Controller
     //Route::get('/delete_receive_history',[OrderController::class,'deleteReceiveHistoryList']);
     public function deleteReceiveHistoryList(){
         $order_id = request()->order_id;
-        if(!is_null($order_id))
+        if(is_null($order_id))
             $records = ScfReceiveAmountHistory::onlyTrashed()->get();
         else
             $records = ScfReceiveAmountHistory::onlyTrashed()->where('order_id',$order_id)->get();
+        //return $records;
         //$records->first()->receive_amount_detail()->withTrashed()->first(); //one to one relationship
         return view('repayment_list',[
             'records'=>$records,
@@ -216,8 +218,9 @@ class OrderController extends Controller
     public function getBuyerRTNumber(String $ymd){ //Buyer receipt
 		$now = Carbon::parse($ymd);
 		$yearMonth = $now->copy()->isoFormat('YYYYMM');
+        //$receiveYearMonth = $now->copy()->isoFormat('YYYY-MM');
         
-		$latestRecord = ScfReceiveAmountHistory::whereNotNull('buyer_receipt_number')->where('receive_ymd','like',$yearMonth.'%')->get()->last();
+		$latestRecord = ScfReceiveAmountHistory::whereNotNull('buyer_receipt_number')->where('buyer_receipt_number','like','%'.$yearMonth.'%')->get()->last();
 		//return $latestRecord;
         if(is_null($latestRecord)){
             $runningNo = 1;

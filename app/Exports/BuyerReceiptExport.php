@@ -89,7 +89,7 @@ class BuyerReceiptExport implements FromView,WithDrawings,WithTitle,WithEvents,W
         $workSheet->getStyle("E12:AC12")->applyFromArray($styleArray);
 
         //Address
-        $workSheet->getStyle("W11:AA11")->applyFromArray($styleArray);
+        $workSheet->getStyle("W11:Z11")->applyFromArray($styleArray);
 
         $styleArray = [
             'borders' => [

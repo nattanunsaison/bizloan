@@ -71,9 +71,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/delete_receive_history',[OrderController::class,'deleteReceiveHistoryList'])->name('repayment.delete_list');
 
-    Route::get('/summary/contractor',[SummaryController::class,'summaryContractor'])->name('summary.contractor');
+    Route::get('/summary/buyers',[SummaryController::class,'summaryContractor'])->name('summary.contractor');
 
-    Route::get('/summary/dealer',[SummaryController::class,'summaryDealer'])->name('summary.dealer');
+    Route::get('/summary/sellers',[SummaryController::class,'summaryDealer'])->name('summary.dealer');
 
     Route::get('/seller_receipt',[ReportController::class,'sellerReceipt']);
 
@@ -88,6 +88,8 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/test_anything',function(){
-    return (new \App\Http\Controllers\HelperController)->getSSARoleUserId();
+    var_dump(round(4918463.65, 2));
+    var_dump(round(4918463.65*0.1, 2));
+    //return (new \App\Http\Controllers\HelperController)->getSSARoleUserId();
 });
 require __DIR__.'/auth.php';

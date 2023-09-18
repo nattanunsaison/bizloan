@@ -140,6 +140,7 @@ class installments extends Model
                     }
                     $date_diff = $now->diffInDays($last_due);
                     $delay_penalty_cal = $outstanding*$delay_penalty_rate/100*($date_diff+1)/365;
+                    $delay_penalty_cal = floor($delay_penalty_cal*100)/100;
                     $delay_penalty_cal = $delay_penalty_cal - $this->paid_late_charge;
                 }else{//has partial paid
                     $last_due = Carbon::parse($this->latestInstallmentHistory->from_ymd); //not yet paid delay penalty
@@ -161,8 +162,10 @@ class installments extends Model
                     $date_diff_from_due = $now->diffInDays($due_ymd);
                     if($now->copy()->isoFormat('YYYYMMDD') > $this->due_ymd){
                         $delay_penalty_cal = $outstanding*$delay_penalty_rate/100*($date_diff_from_due)/365;
+                        $delay_penalty_cal = floor($delay_penalty_cal*100)/100;
                         $delay_penalty_cal = $delay_penalty_cal - $this->paid_late_charge;
                     }else{
+                        $date_diff_from_due = 0;
                         $delay_penalty_cal = 0;
                     }
                 }else{ //first installment has partial payment
@@ -170,6 +173,7 @@ class installments extends Model
                     $last_due = Carbon::parse($this->order->input_ymd); //not yet paid delay penalty
                     $date_diff = $now->diffInDays($last_due);
                     $daily_interest_cal = $outstanding*6/100*($date_diff)/365;
+                    $daily_interest_cal = floor($daily_interest_cal*100)/100;
                     $due_ymd = Carbon::parse($this->due_ymd);
                     $date_diff_from_due = $now->diffInDays($due_ymd);
                     $delay_penalty_cal = $outstanding*$delay_penalty_rate/100*($date_diff_from_due)/365;
@@ -227,6 +231,7 @@ class installments extends Model
                     } 
                     $date_diff = $now->diffInDays($last_due);
                     $delay_penalty_cal = $outstanding*$delay_penalty_rate/100*($date_diff+1)/365;
+                    $delay_penalty_cal = floor($delay_penalty_cal*100)/100;
                     $delay_penalty_cal = $delay_penalty_cal - $this->paid_late_charge;
                 }else{//has partial paid
                     $last_due = Carbon::parse($this->latestInstallmentHistory->from_ymd); //not yet paid delay penalty
@@ -245,6 +250,7 @@ class installments extends Model
                     $date_diff_from_due = $now->diffInDays($due_ymd);
                     if($this->due_ymd < $cal_date->copy()->isoFormat('YYYYMMDD')){
                         $delay_penalty_cal = $outstanding*$delay_penalty_rate/100*($date_diff_from_due)/365;
+                        $delay_penalty_cal = floor($delay_penalty_cal*100)/100;
                         $delay_penalty_cal = $delay_penalty_cal - $this->paid_late_charge;
                     }else{ //not delay yet
                         $delay_penalty_cal = 0;
@@ -254,6 +260,7 @@ class installments extends Model
                     $input_ymd = Carbon::parse($this->order->input_ymd); //not yet paid delay penalty
                     $date_diff_from_input = $now->diffInDays($input_ymd);
                     $daily_interest_cal = $outstanding*6/100*($date_diff_from_input)/365;
+                    $daily_interest_cal = floor($daily_interest_cal*100)/100;
                     $due_ymd = Carbon::parse($this->due_ymd); 
                     $date_diff_from_due = $now->diffInDays($due_ymd);
                     if($this->due_ymd < $cal_date->copy()->isoFormat('YYYYMMDD')){

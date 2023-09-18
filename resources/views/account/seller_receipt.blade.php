@@ -101,7 +101,8 @@
                         <td colspan='3' style='text-align:left'>ชื่อ (Name)</td>
                         <td colspan='12' style='text-align:left'>{{$dealer->dealer_name}}</td>
                         <td colspan='7' style='text-align:left'>เลขประจำตัวผู้เสียภาษี (Tax ID)</td>
-                        <td colspan='5' style='text-align:left'>{{$dealer->tax_id}}</td>
+                        <td colspan='4' style='text-align:left'>{{$dealer->tax_id}}</td>
+                        <td colspan='3' style='text-align:left'>สาขา: xxx</td>
                     </tr>
                     <tr>
                         <td colspan='4' style='text-align:left'>ที่อยู่ (Address)</td>
@@ -151,7 +152,7 @@
                 <tr>
                     <td colspan='17' style='color:white'>{{1}}</td>
                     <td colspan='7' >เงินต้น 10%</td>
-                    <td colspan='5' style='text-align:right' >{{floor($receive_amount_detail->principal*0.1*100)/100}}</td>
+                    <td colspan='5' style='text-align:right' >{{round($receive_amount_detail->principal*0.1,2)}}</td>
                 </tr>
                 <tr>
                     <td colspan='17' style='color:white'>{{1}}</td>

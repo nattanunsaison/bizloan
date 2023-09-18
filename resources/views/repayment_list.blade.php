@@ -1,5 +1,13 @@
 <x-app-layout>
-    @section('title', __('Unpaid order'))
+    @php 
+        $last_path = request()->segment(count(request()->segments()));
+        if($last_path=='delete_receive_history')
+            $title = "Delete repayment list";
+        else 
+            $title = "Repayment list";
+
+    @endphp    
+    @section('title', $title)
 
     <div class="py-12">
         <div class="w-full mx-auto sm:px-6 lg:px-8">
@@ -38,7 +46,7 @@
                             $order = $record->order;
                             $detail = $record->receive_amount_detail()->withTrashed()->first();
                             $ten_percent = $order->purchase_amount*0.1;
-                            $ten_percent_two_decimal = floor($ten_percent*100)/100;
+                            $ten_percent_two_decimal = round($ten_percent,2);
                         @endphp
                         <tr>
                             <td>{{$order->order_number}}</td>

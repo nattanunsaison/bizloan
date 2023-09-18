@@ -114,7 +114,7 @@
 
                 @php 
                     $order = $record->order;
-                    $ten_percent_buffer = $order->purchase_amount*0.1;
+                    $ten_percent_buffer = round($order->purchase_amount*0.1,2);
                     $vat = floor($ten_percent_buffer*7/107 * 100) / 100;
                     $ex_vat = $ten_percent_buffer - $vat;
                 @endphp
@@ -131,7 +131,7 @@
                 <tr>
                     <td colspan='2' style='text-align:center'></td>
                     <td colspan='22'>(2) Amount purchased by Supplier</td>
-                    <td colspan='5' style='text-align:right'>{{$record->receive_amount*0.9}}</td>
+                    <td colspan='5' style='text-align:right'>{{round($record->receive_amount*0.9,2)}}</td>
                 </tr>
                 <tr>
                     <td colspan='2' style='text-align:center'></td>
@@ -190,7 +190,7 @@
                     <tr>
                         <td colspan='7' style='text-align:center'>201001</td>
                         <td colspan='7'>AP payable</td>
-                        <td colspan='7' style='text-align:right'>{{$record->receive_amount*0.1}}</td>
+                        <td colspan='7' style='text-align:right'>{{round($record->receive_amount*0.1,2)}}</td>
                         <td colspan='8'></td>
                     </tr>
                     <tr>
