@@ -36,6 +36,7 @@ class ReceiveAmountConfirmed extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $record = $this->record;
+        dd($record);
         return (new MailMessage)
                     ->line('Receive amount has been confirm for order ID: '.$record->order_id)
                     ->line('Click link below to proceed futher!')

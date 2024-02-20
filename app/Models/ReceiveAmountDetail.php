@@ -11,7 +11,7 @@ class ReceiveAmountDetail extends Model
 {
     use HasFactory,SoftDeletes;
     protected $fillable = [
-        'scf_receive_amount_history_id',
+        'receive_amount_history_id',
         'dealer_type',
         'installment_number',
         'switched_date',
@@ -39,9 +39,12 @@ class ReceiveAmountDetail extends Model
         'tax',
         'paid_tax'
     ];
+    public function installment(){
+        return $this->belongsTo(installments::class, 'installment_id', 'id');
+    }
 
-    public function scf_receive_history(){
-        return $this->hasOne(ScfReceiveAmountHistory::class,'id');
+    public function receive_history(){
+        return $this->belongsTo(ReceiveAmountHistory::class,'receive_amount_history_id', 'id');
     }
 
     //for Supply Chain Finance

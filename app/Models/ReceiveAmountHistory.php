@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ScfReceiveAmountHistory extends Model
+class ReceiveAmountHistory extends Model
 {
     use HasFactory,SoftDeletes;
     protected $fillable = [
@@ -30,6 +30,6 @@ class ScfReceiveAmountHistory extends Model
     }
 
     public function receive_amount_detail(){
-        return $this->hasOne(ReceiveAmountDetail::class,'scf_receive_amount_history_id');
+        return $this->hasOne(ReceiveAmountDetail::class);
     }
 }

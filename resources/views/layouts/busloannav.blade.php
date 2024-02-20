@@ -9,66 +9,49 @@
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
                     </a>
                 </div>
-
+                
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                </div>
-
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('order.unpaid')" :active="request()->routeIs('order.unpaid')">
-                        {{ __('Unpaid order') }}
-                    </x-nav-link>
-                </div>
-
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('repayment.list')" :active="request()->routeIs('repayment.list')">
-                        {{ __('Repayment list') }}
-                    </x-nav-link>
-                </div>
-
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('repayment.delete_list')" :active="request()->routeIs('repayment.delete_list')">
-                        {{ __('Delete repayment list') }}
-                    </x-nav-link>
-                </div>
-
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('summary.dealer')" :active="request()->routeIs('summary.dealer')">
-                        {{ __('Sellers') }}
-                    </x-nav-link>
-                </div>
-
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('summary.contractor')" :active="request()->routeIs('summary.contractor')">
-                        {{ __('Buyers') }}
+                    <x-nav-link :href="route('business_loan.summary')" :active="request()->routeIs('business_loan.summary')">
+                        {{ __('Business Loan') }}
                     </x-nav-link>
                 </div>
                 
                 <!-- Navigation Links -->
-                {{-- <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('business_loan.summary')" :active="request()->routeIs('business_loan.summary')">
-                        {{ __('Business Loan') }}
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('business_loan.customers')" :active="request()->routeIs('business_loan.customers')">
+                        {{ __('Customers') }}
                     </x-nav-link>
-                </div> --}}
+                </div>
+                <!-- Navigation Links -->
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('products')" :active="request()->routeIs('products')">
+                        {{ __('Products') }}
+                    </x-nav-link>
+                </div>
+                <!-- Navigation Links -->
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 py-5 align-middle sm:flex">
+                    <form method="POST" action="{{ route('logout') }}" :active="request()->routeIs('logout')" >
+                        @csrf
+                        <x-nav-link :href="route('logout')"
+                                onclick="event.preventDefault();
+                                            this.closest('form').submit();">
+                            {{ __('Log Out') }}
+                        </x-nav-link>
+                        
+                    </form>
+                </div>
+            </div>
 
+            <!---TE drop down-->
+            <div class="hidden sm:flex sm:items-center sm:ml-6">
+                
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <div class='inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 dark:text-gray-400  focus:outline-none focus:text-gray-700 dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 transition duration-150 ease-in-out'>
                         {{\Carbon\Carbon::now()->isoFormat('DD MMMM YYYY')}}
                     </div>
                 </div>
-            </div>
-
-            <!---TE drop down-->
-            <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <div class="relative" data-te-dropdown-ref>
                     <a
                         class="flex items-center whitespace-nowrap rounded  px-6 pb-2 pt-2.5 text-xs text-gray-500 font-medium uppercase leading-normal "
@@ -78,7 +61,9 @@
                         data-te-dropdown-toggle-ref
                         aria-expanded="false"
                         data-te-ripple-init
-                        data-te-ripple-color="light">
+                        data-te-ripple-color="light"
+                        data-username="{{ Auth::user()->name }}"
+                        data-userid="{{ Auth::user()->id }}">
                         {{ Auth::user()->name }}
                         <span class="ml-2 w-2">
                         <svg
@@ -97,11 +82,10 @@
                         class="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
                         aria-labelledby="dropdownMenuButton2"
                         data-te-dropdown-menu-ref>
-                        
                         <li>
                             {{-- <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"> --}}
-                                <x-dropdown-link :href="route('business_loan.summary')" :active="request()->routeIs('business_loan.summary')">
-                                    {{ __('Business Loan') }}
+                                <x-dropdown-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                                    {{ __('Supply Chain Finance') }}
                                 </x-dropdown-link>
                             {{-- </div> --}}
                         </li>

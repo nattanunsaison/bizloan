@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\InternalApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +17,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+    
 });
+
+// Route::middleware(['auth', 'verified'])->group(function () {
+//     Route::post('/repayment_submit',[InternalApiController::class,'repaymentSubmit']);
+// });
+
+Route::post('/existing_customer_information',[InternalApiController::class,'existingCustomerInformation']);
+Route::post('/register_customer',[InternalApiController::class,'registerCustomer']);
+Route::post('/product_information',[InternalApiController::class,'productInformation']);
+Route::post('/duedate_calculation',[InternalApiController::class,'duedateCalculation']);
+Route::post('/drawdown_input',[InternalApiController::class,'drawdownInput']);
+Route::post('/outstanding_calculation',[InternalApiController::class,'outstandingCalculation']);

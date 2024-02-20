@@ -31,7 +31,7 @@ use App\Models\DealerMonthlyInput;
 use App\Models\credit_increases;
 use App\Enum\ContractorType;
 use App\Models\CustomerInteractionHistory;
-use App\Models\User;
+use App\Models\{User,Product};
 use App\Models\receive_amount_histories;
 use Illuminate\Support\Arr;
 use Illuminate\Pagination\Paginator;
@@ -63,4 +63,9 @@ class SummaryController extends Controller
                 return view('dealer_new')->with('dealers',$dealers);
         }
 
+        //Route::get('/summary/product',[SummaryController::class,'product'])->name('products');
+        public function product(){
+                $products = Product::all();
+                return view('summary.product')->with('products',$products);
+        }
 }

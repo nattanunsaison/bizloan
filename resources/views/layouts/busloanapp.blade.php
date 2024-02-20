@@ -5,15 +5,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}-@yield('title')</title>
+        {{-- <title>{{ config('app.name', 'Laravel') }}-@yield('title')</title> --}}
+        <title>@yield('title')</title>
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
         <link href="https://fonts.googleapis.com/css2?family=Trirong:wght@400&family=Trirong:wght@400&display=swap" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        
-        <!-- Flowbites CSS -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css"  rel="stylesheet" />
         
         <!-- Tailwind element -->
         <!-- <link
@@ -34,12 +32,12 @@
         {{----}}
         {{-- <link href="{{asset('/app-541e4312.css')}}" rel='stylesheet'> --}}
         
-        @vite(['resources/css/app.css', 'resources/js/app.js','resources/js/main.js'])
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
        
     </head>
     <body class="antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            @include('layouts.navigation')
+            @include('layouts.busloannav')
 
             <!-- Page Heading -->
             @if (isset($header))

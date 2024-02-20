@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{OrderController,ReportController,SummaryController};
 use App\Events\ReceiveAmountConfirm;
+use App\Http\Controllers\BusinessLoanController;
+use App\Http\Controllers\InternalApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +25,9 @@ Route::get('/', function () {
 //OrderController
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::get('/dashboard',[OrderController::class, 'orderList'])->name('dashboard');
+    Route::get('/dashboard',function(){
+        return redirect('/business_loan/summary');
+    })->name('dashboard');
 
     Route::get('/unpaidup_orders',[OrderController::class, 'unpaidupOrders'])->name('order.unpaid');
 
@@ -78,6 +82,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/seller_receipt',[ReportController::class,'sellerReceipt']);
 
     Route::get('/download/seller_receipt',[ReportController::class,'downloadSellerReceipt']);
+
+    Route::get('/business_loan/customers/register',[BusinessLoanController::class,'businessLoanConRegis'])->name('business_loan.customers.register');
+    Route::get('/business_loan/customers',[BusinessLoanController::class,'businessLoanCon'])->name('business_loan.customers');
+    Route::get('/business_loan/drawdown/input',[BusinessLoanController::class,'businessLoanDrawdownInput'])->name('business_loan.drawdown.input');
+    // Route::get('/business_loan/drawdown/list',[BusinessLoanController::class,'businessLoanCon'])->name('business_loan.customers');
+    Route::get('/business_loan/summary',[BusinessLoanController::class,'businessLoanSummary'])->name('business_loan.summary');
+    Route::get('/download/drawdown_statement',[BusinessLoanController::class,'downaloadDrawdownStatement']);
+    Route::get('/business_loan/repayment',[BusinessLoanController::class,'businessLoanRepayment'])->name('business_loan.repayment');
+    
+    Route::post('/repayment_submit',[InternalApiController::class,'repaymentSubmit']);
+
+    Route::get('/summary/product',[SummaryController::class,'product'])->name('products');
+
+    Route::post('/reset_repayment_info',[BusinessLoanController::class,'resetRepaymentInfo']);
 });
 
 
@@ -88,8 +106,16 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/test_anything',function(){
-    var_dump(round(4918463.65, 2));
-    var_dump(round(4918463.65*0.1, 2));
+    // return config('app.url');
+    $drawdown_id = 1;
+    // return $drawdown_id;
+
+    if($drawdown_id){
+        event(new ReceiveAmountConfirm($drawdown_id));
+        session(['success'=>true]);
+    }
+    // var_dump(round(4918463.65, 2));
+    // var_dump(round(4918463.65*0.1, 2));
     //return (new \App\Http\Controllers\HelperController)->getSSARoleUserId();
 });
 require __DIR__.'/auth.php';

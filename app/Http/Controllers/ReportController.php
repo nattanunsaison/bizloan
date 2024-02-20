@@ -23,6 +23,7 @@ use App\Models\exemption_late_charges;
 use App\Models\installments;
 use Maatwebsite\Excel\Concerns\FromView;
 use App\Exports\FromViewExport;
+use App\Exports\DealerStatementExport;
 use Illuminate\Support\Facades\Mail;
 use App\Models\eligibilities;
 use App\Exports\{PaymentVoucherExport,ScbTemplateExport,BuyerReceiptExport,SellerReceiptExport};
@@ -58,6 +59,7 @@ class ReportController extends Controller
     public function downloadDealerStatement(){
         $receive_history_id = request()->id;
         $record = ScfReceiveAmountHistory::find($receive_history_id);
+        // return $record;
         $suffix = $record->order->dealer->dealer_name.'-input-'.$record->order->input_ymd;
         $file_name = "supplier_payback_statement-$suffix.xlsx";
         return (new DealerStatementExport($record))->download($file_name);
