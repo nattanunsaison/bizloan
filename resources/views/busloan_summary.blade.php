@@ -64,16 +64,26 @@
                             <td @if($is_delay_and_not_paid_up) class='bg-red-500 text-white' @elseif($is_paid_up) class='bg-gray-400 text-white' @endif>{{$order->canceled_at}}</td>
                             
                             <td class="text-center">
-                                {{-- <a href="drawdown/input?conid={{ $value->id }}"> --}}
-                                <a href="repayment?order_id={{ $order->id }}">
+                                <div class='flex flex-row items-center gap-4'>
+                                    <a href="repayment?order_id={{ $order->id }}">
+                                        <button
+                                        type="submit"
+                                        class="inline-block w-50 bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase text-white hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                                        data-te-ripple-init
+                                        data-te-ripple-color="light">
+                                            Repay
+                                        </button>
+                                    </a>
                                     <button
-                                    type="submit"
-                                    class="inline-block w-50 bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase text-white hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                                    data-te-ripple-init
-                                    data-te-ripple-color="light">
-                                        Repay
+                                        type="button"
+                                        class="inline-block w-50 bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase text-white hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                                        data-te-ripple-init
+                                        data-te-ripple-color="light"
+                                        onclick='sendStatement({{$order->id}})'
+                                        >
+                                            Send statement
                                     </button>
-                                </a>
+                                </div>
                             </td>
                         </tr>
 
@@ -96,14 +106,14 @@
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
 
 <!-- Main modal -->
-<div id="defaultModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
-    <div class="relative w-full h-full max-w-4xl md:h-auto">
+<div id="defaultModal" tabindex="-1" aria-hidden="true" class="fixed bg-gray-200 top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
+    <div class="relative w-full h-full max-w-2xl md:h-auto">
         <!-- Modal content -->
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <!-- Modal header -->
             <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    Conversation history
+                    Information
                 </h3>
                 <button onclick="closeModal()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
                     <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
@@ -111,42 +121,28 @@
                 </button>
             </div>
             <!-- Modal body -->
-            <div class="p-6 space-y-6 w-full text-sm">
-                <span id='company_name'>Line user id</span><br>
-                <span id='contractor_id'>Contractor id</span>
-                <div id='result' class='text-white font-bold bg-green-500 text-center p-2 rounded' hidden></div>
-                <div class='grid grid-cols-3 gap-4'>
-                    <div class='col-span-2'>
-                        <input class='w-full rounded' type="text" placeholder="Type text to send to this contractor here" name='comment' id='comment'>
-                    </div>
-                    <div calss='col-span-1'>
-                        <button id="submit_comment" type="button" class="{{config('colors.bg_confirm_color_set')}} focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Send</button>
-                    </div>
-                </div>
-                <div id='modal_conversation_history'>
-                    <table id='conver_table' class="display" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>Text</th>
-                                <th>Created at</th>
-                                <th>Contractor ID</th>
-                            </tr>  
-                        </thead>
-                        <tfoot>
-                            <tr>
-                                <th>Text</th>
-                                <th>Created at</th>
-                                <th>Contractor ID</th>
-                            </tr>  
-                        </tfoot>
-                    </table>
-                    
+            <div class="p-6 space-y-6 w-full text-normal flex justify-center" id='modal-body'>
+                <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                    <!-- Heroicon name: outline/exclamation -->
+                    <svg version="1.1" id="L9" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                    viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
+                        <path fill="red" d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50">
+                            <animateTransform 
+                                attributeName="transform" 
+                                attributeType="XML" 
+                                type="rotate"
+                                dur="1s" 
+                                from="0 50 50"
+                                to="360 50 50" 
+                                repeatCount="indefinite" />
+                        </path>
+                    </svg>
                 </div>
             </div>
             <!-- Modal footer -->
             <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
                 
-                <button onclick="closeModal()" type="button" class="text-white bg-gray-400 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Close</button>
+                <button onclick="closeModal()" type="button" class="text-white bg-gray-400 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5  focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Close</button>
             </div>
         </div>
     </div>
@@ -185,9 +181,33 @@
 <script>
     const targetEl = document.getElementById('defaultModal');
     const modal = new Modal(targetEl);
-
+    //modal.show()
     function closeModal(){
         modal.toggle();
     }
 
+    function sendStatement(id){    
+        uri = '../send_statement'
+        // uri = '/api/repayment_submit'
+        const fd = new FormData();
+        fd.append('_token','{{csrf_token()}}');
+        fd.append('order_id',id)
+        modal.show()
+        $.ajax({
+            type: 'POST',
+            url: uri,
+            cache: false,
+            contentType: false,
+            processData: false,
+            data : fd,
+            success: function(data){
+                console.log(data)
+                modal.show()
+                $('#modal-body').html('Sent statement successfully!')
+                //window.location.reload()
+            },error: function(err){
+                console.log(err)
+            }
+        })
+    }
 </script>

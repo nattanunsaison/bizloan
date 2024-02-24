@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Models\{order,contractors,Customer,dealers,ReceiveAmountHistory,ReceiveAmountDetail,Product,ProductOffering};
 use Illuminate\View\View;
 use App\Enum\FlagText;
+use App\Exports\DrawdownStatementExport;
 
 class BusinessLoanController extends Controller
 {
@@ -101,8 +102,8 @@ class BusinessLoanController extends Controller
         // return ($orderData);
         // return ($orderData->installments->first()->delayPenalty());
         
-        $orderData->due_ymd_text = Carbon::createFromFormat('Ymd',$orderData->due_ymd)->format('d F Y');
-        $orderData->purchase_ymd_text = Carbon::createFromFormat('Ymd',$orderData->purchase_ymd)->format('d F Y');
+        $orderData->due_ymd_text = Carbon::createFromFormat('Ymd',$orderData->due_ymd)->addYears(543)->locale('th-TH')->isoFormat('LL');
+        $orderData->purchase_ymd_text = Carbon::createFromFormat('Ymd',$orderData->purchase_ymd)->addYears(543)->locale('th-TH')->isoFormat('LL');
         $orderData->bill_principal = $orderData->principal - $orderData->paid_principal;
         $orderData->bill_interest = $orderData->interest - $orderData->paid_interest;
         $orderData->bill_total = $orderData->bill_principal + $orderData->bill_interest;
@@ -111,11 +112,30 @@ class BusinessLoanController extends Controller
         
         // $receive_history_id = request()->id;
         // $record = ScfReceiveAmountHistory::find($receive_history_id);
-        // $suffix = $record->order->dealer->dealer_name.'-input-'.$record->order->input_ymd;
-        // $file_name = "seller_receipt-$suffix.xlsx";
-        // return (new SellerReceiptExport($record))->download($file_name);
+        $suffix = $orderData->order_number;
+        $file_name = "drawdown_statement-$suffix.xlsx";
+        //return public_path('\images\saison_credit.png');
+        //return (new DrawdownStatementExport($orderData))->download($file_name);
+        $file_name = "drawdown_statement-$suffix.pdf";
+        //create pdf
+        $mpdf = new \Mpdf\Mpdf([
+                'mode' => 'utf-8',
+                'format' => 'A4',
+                'margin_header' => '3',
+                'margin_top' => '10',
+                'margin_bottom' => '20',
+                'margin_footer' => '2',
+            ]);
+        $mpdf->useDictionaryLBR = false;
+        $file_path = storage_path('/app/public/statement')."/$file_name";
+        $mpdf->WriteHTML(view('reports.business_loan_statement_export_print', [
+            'order' => $orderData,
+        ]));
+        $mpdf->Output($file_path,'F');
+        ///return;
+        //return (new DrawdownStatementExport($orderData))->store($file_name,'public', \Maatwebsite\Excel\Excel::MPDF,);
 
-        return view('reports.business_loan_statement_export', [
+        return view('reports.business_loan_statement_export_print', [
             'order' => $orderData,
         ]);
     }
@@ -139,7 +159,7 @@ class BusinessLoanController extends Controller
         $first_payment = $histories->first();
         $last_receive_date = null;
         //return $orderData->installments->first()->order->product_offering->product;//->allocateReceiveAmount(\Carbon\Carbon::parse('20240524')->isoFormat('YYYY-MM-DD'),20000);
-        //return $orderData->installments->first()->calAccruInterestAndDelayPenalty(\Carbon\Carbon::parse('20231101')->isoFormat('YYYY-MM-DD'));//interestWithDate(\Carbon\Carbon::now()->isoFormat('YYYY-MM-DD'));
+        //return $orderData->installments->first()->calAccruInterestAndDelayPenalty(\Carbon\Carbon::parse('20241030')->isoFormat('YYYY-MM-DD'));//interestWithDate(\Carbon\Carbon::now()->isoFormat('YYYY-MM-DD'));
 
         //return;
         if(!$orderData){
@@ -238,6 +258,7 @@ class BusinessLoanController extends Controller
             $installment->paid_principal = 0;
             $installment->paid_interest = 0;
             $installment->paid_late_charge = 0;
+            $installment->paid_up_ymd = null;
             $installment->save();
         });
         //return $order->receive_histories->first()->receive_amount_detail;

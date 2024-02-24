@@ -3,10 +3,11 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{OrderController,ReportController,SummaryController};
-use App\Events\ReceiveAmountConfirm;
+use App\Events\{ReceiveAmountConfirm,DrawdownConfirmed};
 use App\Http\Controllers\BusinessLoanController;
 use App\Http\Controllers\InternalApiController;
-
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\ReceiveAmountConfirmed;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -96,6 +97,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/summary/product',[SummaryController::class,'product'])->name('products');
 
     Route::post('/reset_repayment_info',[BusinessLoanController::class,'resetRepaymentInfo']);
+
+    Route::post('/send_statement',[InternalApiController::class,'sendStatement']);
+
+    Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
 });
 
 
@@ -107,7 +112,10 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/test_anything',function(){
     // return config('app.url');
-    $drawdown_id = 1;
+    $users = (new \App\Http\Controllers\HelperController)->getSSARoleUserId();
+    $order = \App\Models\order::where('order_number','BL20240216-1509')->first();
+    event(new DrawdownConfirmed($order));
+    return;
     // return $drawdown_id;
 
     if($drawdown_id){

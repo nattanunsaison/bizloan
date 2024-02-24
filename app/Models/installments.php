@@ -77,7 +77,7 @@ class installments extends Model
         $discount_rate = $this->discountRate();
         $delay_penalty_rate = $this->delayPenaltyRate();
         $due_ymd = $this->due_ymd;
-        $is_delay = ($cal_date->copy()->isoFormat('YYYYMMDD') > $due_ymd) ? "Yes" : 'No';
+        $is_delay = ($cal_date->copy()->isoFormat('YYYYMMDD') > $due_ymd && is_null($this->paid_up_ymd)) ? "Yes" : 'No';
         $principal_balance = $this->principal - $this->paid_principal;
         $delay_penalty_cal =0;
         $date_diff_from_due = $cal_date->copy()->diffInDays($due_ymd);
@@ -94,7 +94,7 @@ class installments extends Model
                 $daily_interest_cal = floatval($daily_interest_before_due) + floatval($daily_interest_after_due);
                 $daily_interest_cal = floor($daily_interest_cal*100)/100;
             }else{ //has partial payment
-                $delay_penalty_cal = $principal_balance*$delay_penalty_rate/100*($date_diff_from_due)/365;
+                $delay_penalty_cal = $principal_balance*$delay_penalty_rate/100*($date_diff_from_last_receive)/365;
                 $delay_penalty_cal = floor($delay_penalty_cal*100)/100;
                 //partial payment within due
                 if($last_receive_date->copy()->isoFormat('YYYYMMDD') <= $due_ymd){
@@ -104,7 +104,7 @@ class installments extends Model
                 }else{// partial payment after due
                     $date_diff_from_last_receive_to_due = $last_receive_date->copy()->diffInDays($due_ymd);
                     $daily_interest_before_due = 0;
-                    $daily_interest_after_due = $principal_balance*$effective_interest_rate/100*($date_diff_from_last_receive_to_due)/365;
+                    $daily_interest_after_due = $principal_balance*$effective_interest_rate/100*($date_diff_from_last_receive)/365;
                 }
                 //partial payment after due  
                 $daily_interest_cal = floatval($daily_interest_before_due) + floatval($daily_interest_after_due);
@@ -118,10 +118,10 @@ class installments extends Model
             $daily_interest_cal = floatval($daily_interest_before_due) + floatval($daily_interest_after_due);
             $daily_interest_cal = floor($daily_interest_cal*100)/100;
         }
-        $principal = $this->order->purchase_amount;
-        $accru_paid_principal = floatval($details->sum('paid_principal'));
-        $accru_paid_interest = floatval($details->sum('paid_interest'));
-        $accru_paid_delay_penalty = floatval($details->sum('paid_late_charge'));
+        $principal = floor($this->order->purchase_amount*100)/100;
+        $accru_paid_principal = floor($details->sum('paid_principal')*100)/100;
+        $accru_paid_interest = floor($details->sum('paid_interest')*100)/100;
+        $accru_paid_delay_penalty = floor($details->sum('paid_late_charge')*100)/100;
         $accru_total_paid =  $accru_paid_principal + $accru_paid_interest +$accru_paid_delay_penalty;
         $accru_interest = floor($details->sum('interest')*100)/100 + floor($daily_interest_cal*100)/100;
         $accru_delay_penalty = floor($details?->sum('late_charge')*100)/100 + floor($delay_penalty_cal*100)/100;

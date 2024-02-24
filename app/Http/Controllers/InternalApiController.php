@@ -15,6 +15,7 @@ use App\Models\{order,contractors,Customer,dealers,ReceiveAmountHistory,ReceiveA
 use Illuminate\View\View;
 use Illuminate\Support\Arr;
 use App\Events\ReceiveAmountConfirm;
+use App\Events\DrawdownConfirmed;
 
 class InternalApiController extends Controller
 {
@@ -181,13 +182,9 @@ class InternalApiController extends Controller
             ]);
             DB::commit();
 
-            //$sendStatament = $this->sendDrawdownInputStatament($drawdown_id);
+            event(new DrawdownConfirmed($drawdown_input_create));
             // return $sendStatament;
             
-            // if($drawdown_id){
-            //     event(new ReceiveAmountConfirm($record));
-            //     session(['success'=>true]);
-            // }
 
             return response([
                 'message' => "Drawdown input Tax ID : ".$tax_id." successfully",
@@ -208,7 +205,7 @@ class InternalApiController extends Controller
         // $drawdown_data =;
         
         if($drawdown_id){
-            event(new ReceiveAmountConfirm($drawdown_id));
+            event(new DrawdownConfirmed($drawdown_id));
             session(['success'=>true]);
         }
     }
@@ -444,5 +441,13 @@ class InternalApiController extends Controller
         }
 
         return $detail;
+    }
+
+    //Route::post('/send_statement',[InternalApiController::class,'sendStatement']);
+    public function sendStatement(Request $request){
+        //return $request;
+        $order = order::find($request->order_id);
+        event(new DrawdownConfirmed($order));
+        return "OK";
     }
 }

@@ -11,6 +11,8 @@ use App\Listeners\SendReceiveAmountConfirmEmail;
 use App\Listeners\CreatePaybackSupplierStatement;
 use App\Events\DeleteAmountConfirm;
 use App\Listeners\SendDeleteAmountConfirmEmail;
+use App\Events\DrawdownConfirmed;
+use App\Listeners\SendDrawdownStatement;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -32,6 +34,10 @@ class EventServiceProvider extends ServiceProvider
         DeleteAmountConfirm::class => [
             SendDeleteAmountConfirmEmail::class,
         ],
+
+        DrawdownConfirmed::class=>[
+            SendDrawdownStatement::class,
+        ]
     ];
 
     /**

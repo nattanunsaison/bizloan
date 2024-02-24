@@ -29,7 +29,7 @@ class SendReceiveAmountConfirmEmail
         //$users = \App\Models\User::whereIn('id',[1,60])->get();
         //$users = ['paopan@siamsaison.com','thitikwan@siamsaison.com'];
         // dd(storage_path());
-        dd(Storage::disk('drawdownReceipt'));
+        //dd(Storage::disk('drawdownReceipt'));
         Notification::send($users, new ReceiveAmountConfirmed($event->record));
     }
 }

@@ -39,71 +39,60 @@
             h2{
                 padding-top: 10px;
             }
+            .grid-container {
+                display: grid;
+                grid-template-columns: auto auto;
+                padding-top: 8px;
+            }
+            .grid-item {
+                background-color: rgba(255, 255, 255, 0.8);
+                font-size: 20px;
+                text-align: center;
+                font-weight: bold;
+            }
+            body {
+                font-family: 'browallia';
+            }
         </style>
         @endif
     </head>
     <body size='A4'>
         <div class='content'>
-            <div><img style="width:15%;" class="object-cover" src="{{config('constants.app_url')}}/saison_credit.png"></div>
+            <div class='grid-container'>
+                <div class='grid-item' style='text-align:left'><img style="width:30%;" src="{{config('constants.app_url')}}/saison_credit.png"></div>
+                <div class='grid-item'>
+                    <div style='text-align:right;padding-top:10px'>ใบแจ้งยอดรายการเซย์ซอนเครดิต/ใบแจ้งหนี้</div>
+                    <div style="text-align:right" ><img style="width:40%;text-align:right" src="{{config('constants.app_url')}}/siamsaisonlogo.png"></div>
+                </div>
+                
+            </div>
             @php
                 // $dealer = $record->order->dealer;
                 // $addresses = explode("\n", $dealer->address);
             @endphp
+            <br>
             <table style="width:100%">
                 <tbody>
                     <tr>
                         {{-- customer name --}}
-                        <td colspan='1' style='text-align:left'>Ref: {{ $order->order_number }}</td>
-                        <td colspan='1' style=''></td>
-                        {{-- @for($i=0;$i < 28;$i++) <td></td> @endfor --}}
+                        <td colspan='14' style='text-align:left;font-size:15px'><b>Ref: {{ $order->order_number }}</b></td>
+                        <td colspan='15' style='text-align:right;font-size:15px'><b>บริษัท สยาม เซย์ซอน จำกัด</b></td>
                     </tr>
                     <tr>
                         {{-- customer name --}}
-                        <td colspan='1' style='text-align:left'>{{ $order->th_company_name }}</td>
-                        <td colspan='1' style=''></td>
-                        {{-- @for($i=0;$i < 28;$i++) <td></td> @endfor --}}
+                        <td colspan='14' style='text-align:left'>{{ $order->th_company_name }}</td>
+                        <td colspan='15' style='text-align:right'>เลขที่ 1 ถนนปูนซิเมนต์ไทย บางซื่อ กรุงเทพฯ 10800</td>
                     </tr>
                     <tr>
                         {{-- customer address --}}
-                        <td colspan='1' style='text-align:left'>{{ $order->customer_address }}</td>
-                        <td colspan='1' style=''></td>
-                        {{-- @for($i=0;$i < 28;$i++) <td></td> @endfor --}}
+                        <td colspan='14' style='text-align:left'>{{ $order->customer_address }}</td>
+                        <td colspan='15' style='text-align:right'>เลขทะเบียนนิติบุคคล : 0105561195866 โทรศัพท์ 02-586-3021</td>
                     </tr>
                     <tr>
-                        <td colspan='1' style='text-align:left'>เลขทะเบียนนิติบุคคล : {{ $order->tax_id }}</td>
-                        <td colspan='1' style=''></td>
-                        {{-- @for($i=0;$i < 28;$i++) <td></td> @endfor --}}
+                        <td colspan='14' style='text-align:left'>เลขทะเบียนนิติบุคคล : {{ $order->tax_id }}</td>
+                        <td colspan='15' style='text-align:right'>เวลาทำการ จันทร์ - ศุกร์ 09.00 - 17.00 ยกเว้นวันหยุดนักขัตฤกษ์</td>
                     </tr>
-                    <tr>
-                        <td colspan='1' style=''></td>
-                        <td colspan='1' style='text-align:right'><h2>ใบแจ้งยอดรายการเซย์ซอนเครดิต/ใบแจ้งหนี้</h2></td>
-                        {{-- <td><img class="object-cover" src="{{config('constants.app_url')}}/siamsaisonlogo.png"></td> --}}
-                    </tr>
-                    <tr>
-                        {{-- <td><h2>ใบแจ้งยอดรายการเซย์ซอนเครดิต/ใบแจ้งหนี้</h2></td> --}}
-                        <td colspan='1' style=''></td>
-                        <td colspan='1' style='text-align:right; width:50%;'><img style="width:40%;" class="object-cover" src="{{config('constants.app_url')}}/siamsaisonlogo.png"></td>
-                    </tr>
-                    <tr>
-                        <td colspan='1' style='text-align:left'></td>
-                        {{-- @for($i=0;$i < 27;$i++) <td></td> @endfor --}}
-                        <td colspan='1' style='text-align:right'><b>บริษัท สยาม เซย์ซอน จำกัด</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan='1' style='text-align:left'><b></b></td>
-                        {{-- @for($i=0;$i < 27;$i++) <td></td> @endfor --}}
-                        <td colspan='1' style='text-align:right'>เลขที่ 1 ถนนปูนซิเมนต์ไทย บางซื่อ กรุงเทพฯ 10800</td>
-                    </tr>
-                    <tr>
-                        <td colspan='1' style='text-align:left'></td>
-                        {{-- @for($i=0;$i < 27;$i++) <td></td> @endfor --}}
-                        <td colspan='1' style='text-align:right'>เลขทะเบียนนิติบุคคล : 0105561195866 โทรศัพท์ 02-586-3021</td>
-                    </tr>
-                    <tr>
-                        <td colspan='1' style='text-align:left'></td>
-                        {{-- @for($i=0;$i < 27;$i++) <td></td> @endfor --}}
-                        <td colspan='1' style='text-align:right'>เวลาทำการ จันทร์ - ศุกร์ 09.00 - 17.00 ยกเว้นวันหยุดนักขัตฤกษ์</td>
-                    </tr>
+                    <tr style="color:white"> <td colspan='29'>x</td> <tr>
                     <tr style="background-color:#FF0000"> <td colspan='29'></td> <tr>
                     <tr>
                         <td colspan='16' style='text-align:center'>วันโอนเงิน</td>
@@ -119,38 +108,37 @@
             </table>
             <h4>รายละเอียดสัญญา</h4>
             <table style="width:100%">
-                {{-- <thead> --}}
                     <tr>
                         <td colspan='1'></td>
-                        <td colspan='1' style='text-align:left'>ยอดเงินกู้</td>
-                        <td colspan='1' style='text-align:left'>{{ $order->loan_amount }}</td>
-                        <td colspan='1'></td>
+                        <td colspan='10' style='text-align:left'>ยอดเงินกู้</td>
+                        <td colspan='10' style='text-align:right'>{{ $order->loan_amount }}</td>
+                        <td colspan='8'>x</td>
                         {{-- <td></td> --}}
                     </tr>
                     <tr>
                         <td colspan='1'></td>
-                        <td colspan='1' style='text-align:left'>ระยะเวลา (วัน)</td>
-                        <td colspan='1' style='text-align:left'>{{ $order->terms }}</td>
-                        <td colspan='1'></td>
+                        <td colspan='10' style='text-align:left'>ระยะเวลา (วัน)</td>
+                        <td colspan='10' style='text-align:right'>{{ $order->terms }}</td>
+                        <td colspan='8'>x</td>
                     </tr>
                     <tr>
                         <td colspan='1'></td>
-                        <td colspan='1' style='text-align:left'>อัตราดอกเบี้ย (%)</td>
-                        <td colspan='1' style='text-align:left'>{{ $order->interest_rate }}</td>
-                        <td colspan='1'></td>
+                        <td colspan='10' style='text-align:left'>อัตราดอกเบี้ย (%)</td>
+                        <td colspan='10' style='text-align:right'>{{ $order->interest_rate }}</td>
+                        <td colspan='8'>x</td>
                     </tr>
                     <tr>
                         <td colspan='1'></td>
-                        <td colspan='1' style='text-align:left'>อัตราดอกเบี้ยปรับผิดนัดชำระ (%)</td>
-                        <td colspan='1' style='text-align:left'>{{ $order->delay_penalty_rate }}</td>
-                        <td colspan='1'></td>
+                        <td colspan='10' style='text-align:left'>อัตราดอกเบี้ยปรับผิดนัดชำระ (%)</td>
+                        <td colspan='10' style='text-align:right'>{{ $order->delay_penalty_rate }}</td>
+                        <td colspan='8'>x</td>
                     </tr>
                     @if ( $order->discount_rate > 0 )
                         <tr>
                             <td colspan='1'></td>
-                            <td colspan='1' style='text-align:left'>อัตราส่วนลดดอกเบี้ย (%)</td>
-                            <td colspan='1' style='text-align:left'>{{ $order->discount_rate }}</td>
-                            <td colspan='1'></td>
+                            <td colspan='10' style='text-align:left'>อัตราส่วนลดดอกเบี้ย (%)</td>
+                            <td colspan='10' style='text-align:right'>{{ $order->discount_rate }}</td>
+                            <td colspan='8'></td>
                         </tr>
                     @endif
                 {{-- </thead>
@@ -158,37 +146,30 @@
                 </tbody> --}}
             </table>
             <h4>รายละเอียดการชำระ</h4>
-            <table style="width:100%">
-                {{-- <thead> --}}
-                {{-- <tr>
-                    <th colspan='2'></th>
-                    <th colspan='2' style='text-align:center'>ยอดเงินต้นคงค้าง</th>
-                    <th colspan='9' style='text-align:center'>ยอดดอกเบี้ยคงค้าง</th>
-                </tr> --}}
-                
+            <table style="width:100%">              
                 <tr>
                     <td colspan='1'></td>
-                    <td colspan='1'></td>
-                    <td colspan='1' style='text-align:left'>จำนวนเงิน(บาท)</td>
-                    <td colspan='1'></td>
+                    <td colspan='10'></td>
+                    <td colspan='10' style='text-align:left'>จำนวนเงิน(บาท)</td>
+                    <td colspan='8'>x</td>
                 </tr>
                 <tr>
                     <td colspan='1'></td>
-                    <td colspan='1' style='text-align:left'>ยอดเงินต้นคงค้าง</td>
-                    <td colspan='1' style='text-align:left'>{{ $order->bill_principal }}</td>
-                    <td colspan='1'></td>
+                    <td colspan='10' style='text-align:left'>ยอดเงินต้นคงค้าง</td>
+                    <td colspan='10' style='text-align:right'>{{ $order->bill_principal }}</td>
+                    <td colspan='8'>x</td>
                 </tr>
                 <tr>
                     <td colspan='1'></td>
-                    <td colspan='1' style='text-align:left'>ยอดดอกเบี้ยคงค้าง</td>
-                    <td colspan='1' style='text-align:left'>{{ $order->bill_interest }}</td>
-                    <td colspan='1'></td>
+                    <td colspan='10' style='text-align:left'>ยอดดอกเบี้ยคงค้าง</td>
+                    <td colspan='10' style='text-align:right'>{{ $order->bill_interest }}</td>
+                    <td colspan='8'>x</td>
                 </tr>
                 <tr>
                     <td colspan='1'></td>
-                    <td colspan='1' style='text-align:left'>ยอดรวมที่ต้องชำระงวดนี้</td>
-                    <td colspan='1' style='text-align:left'>{{ $order->bill_total }}</td>
-                    <td colspan='1'></td>
+                    <td colspan='10' style='text-align:left'>ยอดรวมที่ต้องชำระงวดนี้</td>
+                    <td colspan='10' style='text-align:right'>{{ $order->bill_total }}</td>
+                    <td colspan='8'>x</td>
                 </tr>
                 {{-- </thead>
                 <tbody> --}}

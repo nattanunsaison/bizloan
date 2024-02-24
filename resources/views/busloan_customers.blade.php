@@ -44,8 +44,8 @@
                                 <td>{{$value->tax_id}}</td>
                                 <td>{{$value->en_company_name}}</td>
                                 <td>{{$value->th_company_name}}</td>
-                                <td>{{$value->business_loan_amount}}</td>
-                                <td>{{$value->offering_grade}}</td>
+                                <td class='text-right'>{{number_format($value->business_loan_amount,2)}}</td>
+                                <td class='text-right'>{{$value->offering_grade}}</td>
                                 <td>{{$value->username}}</td>
                                 <td>{{$value->status_text}}</td>
                                 <td>{{$value->master_agreement_text}}</td>

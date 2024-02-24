@@ -21,8 +21,8 @@ class HelperController extends Controller
             'header'=>json_encode($header,JSON_UNESCAPED_UNICODE),
             'response'=>collect(json_decode($response,true))
         ]);
-        // $emails = json_decode($response,true);
-        $emails = ['nattanun@siamsaison.com'];
+        $emails = array_filter(json_decode($response,true));
+        $emails = ['paopan@siamsaison.com'];
         // dd($emails);
         return $users = User::whereIn('email',$emails)->get();
     }
