@@ -34,6 +34,7 @@ class ReceiveAmountDetail extends Model
         'installment_id',
         'dealer_id',
         'exceeded_occurred_amount',
+        'exceeded_occurred_ymd',
         'payback_amount',
         'outstanding_balance',
         'tax',

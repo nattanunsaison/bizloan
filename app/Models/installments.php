@@ -91,32 +91,37 @@ class installments extends Model
                 $delay_penalty_cal = floor($delay_penalty_cal*100)/100;
                 $daily_interest_before_due = $principal_balance*$interest_before_due/100*($term)/365;
                 $daily_interest_after_due = $principal_balance*$effective_interest_rate/100*($date_diff_from_due)/365;
-                $daily_interest_cal = floatval($daily_interest_before_due) + floatval($daily_interest_after_due);
+                $daily_interest_cal = floor($daily_interest_before_due*100)/100 + floor($daily_interest_after_due*100)/100;
                 $daily_interest_cal = floor($daily_interest_cal*100)/100;
             }else{ //has partial payment
-                $delay_penalty_cal = $principal_balance*$delay_penalty_rate/100*($date_diff_from_last_receive)/365;
-                $delay_penalty_cal = floor($delay_penalty_cal*100)/100;
                 //partial payment within due
                 if($last_receive_date->copy()->isoFormat('YYYYMMDD') <= $due_ymd){
                     $date_diff_from_last_receive_to_due = $last_receive_date->copy()->diffInDays($due_ymd);
                     $daily_interest_before_due = $principal_balance*$interest_before_due/100*($date_diff_from_last_receive_to_due)/365;
                     $daily_interest_after_due = $principal_balance*$effective_interest_rate/100*($date_diff_from_due)/365;
+                    //if today also <= due
+                    if($cal_date->copy()->isoFormat('YYYYMMDD' <= $due_ymd)){
+                        $delay_penalty_cal = floor(0*100)/100; 
+                    }else{ //first delay
+                        $delay_penalty_cal = $principal_balance*$delay_penalty_rate/100*($date_diff_from_due)/365;
+                        $delay_penalty_cal = floor($delay_penalty_cal*100)/100;
+                    }                   
                 }else{// partial payment after due
                     $date_diff_from_last_receive_to_due = $last_receive_date->copy()->diffInDays($due_ymd);
                     $daily_interest_before_due = 0;
                     $daily_interest_after_due = $principal_balance*$effective_interest_rate/100*($date_diff_from_last_receive)/365;
+                    $delay_penalty_cal = $principal_balance*$delay_penalty_rate/100*($date_diff_from_last_receive)/365;
+                    $delay_penalty_cal = floor($delay_penalty_cal*100)/100;
                 }
                 //partial payment after due  
-                $daily_interest_cal = floatval($daily_interest_before_due) + floatval($daily_interest_after_due);
-                $daily_interest_cal = floor($daily_interest_cal*100)/100;
+                $daily_interest_cal = floor($daily_interest_before_due*100)/100 + floor($daily_interest_after_due*100)/100;
             }
             
         }else{
             $effective_interest_rate = $interest_rate - $discount_rate;
             $daily_interest_before_due = $principal_balance*$effective_interest_rate/100*($date_diff_from_last_receive)/365;
             $daily_interest_after_due = 0;
-            $daily_interest_cal = floatval($daily_interest_before_due) + floatval($daily_interest_after_due);
-            $daily_interest_cal = floor($daily_interest_cal*100)/100;
+            $daily_interest_cal = floor($daily_interest_before_due*100)/100 + floor($daily_interest_after_due*100)/100;
         }
         $principal = floor($this->order->purchase_amount*100)/100;
         $accru_paid_principal = floor($details->sum('paid_principal')*100)/100;
@@ -147,11 +152,11 @@ class installments extends Model
             'accru_paid_principal'=>$accru_paid_principal,
             'accru_paid_interest'=>$accru_paid_interest,
             'accru_paid_delay_penalty'=>$accru_paid_delay_penalty,
-            'accru_total_paid'=>floatval($accru_total_paid),
-            'billing_principal'=>floor($billing_principal*100)/100,
-            'billing_interest'=>floor($billing_interest*100)/100,
-            'billing_delay_penalty'=>floor($billing_delay_penalty*100)/100,
-            'sum_billing'=>floor($sum_billing*100)/100,
+            'accru_total_paid'=>round($accru_total_paid,2),
+            'billing_principal'=>round($billing_principal,2),
+            'billing_interest'=>round($billing_interest,2),
+            'billing_delay_penalty'=>round($billing_delay_penalty,2),
+            'sum_billing'=>round($sum_billing,2),
             'effective_interest_rate'=>$effective_interest_rate,
             'date_diff_from_due'=>$date_diff_from_due,
             'date_diff_form_last_receive'=>$date_diff_from_last_receive,
@@ -568,14 +573,14 @@ class installments extends Model
         $a = Arr::add($billing_part,'receive_amount',$receive_amount);
         $b = Arr::add($a,'allocate_delay_penalty',$allocate_delay_penalty);
         $c = Arr::add($b,'allocate_interest',$allocate_interest);
-        $d = Arr::add($c,'allocate_principal',floatval($allocate_principal));
-        $principal_balance = floor(($outstanding_principal-$allocate_principal)*100)/100;
-        $interest_balance = floor(($interest-$allocate_interest)*100)/100;
-        $delay_penalty_balance = floor(($delay_penalty-$allocate_delay_penalty)*100)/100;
+        $d = Arr::add($c,'allocate_principal',round($allocate_principal,2));
+        $principal_balance = round($outstanding_principal-$allocate_principal,2);
+        $interest_balance = round($interest-$allocate_interest,2);
+        $delay_penalty_balance = round($delay_penalty-$allocate_delay_penalty,2);
         $e = Arr::add($d,'balance_principal',$principal_balance);
         $f = Arr::add($e,'balance_interest',$interest_balance);
         $g = Arr::add($f,'balance_delay_penalty',$delay_penalty_balance);
-        $total_balance = floor(($principal_balance+$interest_balance+$delay_penalty_balance)*100)/100;
+        $total_balance = round($principal_balance+$interest_balance+$delay_penalty_balance,2);
         return $h = Arr::add($g,'balance_total',$total_balance);
 
         return $outstanding_part;

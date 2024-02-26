@@ -393,7 +393,7 @@ class InternalApiController extends Controller
         $installment->paid_principal += $paid_principal;
         $installment->paid_interest += $paid_interest;
         $installment->paid_late_charge += $paid_late_charge;
-        if($outstandingCal['balance_principal'] == 0){
+        if($outstandingCal['balance_principal'] <= 0){
             $installment->paid_up_ymd = Carbon::createFromFormat('d/m/Y',$get_repayment_date)->isoFormat('YYYYMMDD');
             $order = order::find($order_id);
             $order->paid_up_ymd = Carbon::createFromFormat('d/m/Y',$get_repayment_date)->isoFormat('YYYYMMDD');
@@ -417,7 +417,7 @@ class InternalApiController extends Controller
             'paid_principal'=>$paid_principal,
             'paid_interest'=>$paid_interest,
             'paid_late_charge'=>$paid_late_charge,
-            'total_principal'=>$outstandingCal['balance_principal'],
+            'total_principal'=>($outstandingCal['balance_principal'] < 0) ? 0 : $outstandingCal['balance_principal'] ,
             'total_interest'=>$outstandingCal['balance_interest'],
             'total_late_charge'=>$outstandingCal['balance_delay_penalty'],
             // 'waive_late_charge'=>$exempt_late_charge,
@@ -427,9 +427,10 @@ class InternalApiController extends Controller
             'order_id'=>$order_id,
             'installment_id'=>$installment->id,
             'dealer_id',
-            // 'exceeded_occurred_amount'=>$request->exceeded_amount,
+            'exceeded_occurred_amount'=>($outstandingCal['balance_principal'] < 0) ? abs($outstandingCal['balance_principal']) : null,
+            'exceeded_occurred_ymd'=>($outstandingCal['balance_principal'] < 0) ? Carbon::createFromFormat('d/m/Y',$get_repayment_date)->isoFormat('YYYYMMDD') : null,
             // 'payback_amount'=>$request->payback_amount_to_supplier,
-            'outstanding_balance'=>$outstandingCal['balance_total'],
+            'outstanding_balance'=>($outstandingCal['balance_total'] < 0) ? 0 : $outstandingCal['balance_total'],
             // 'tax'=>$request->tax,
             // 'paid_tax'=>$request->tax_to_pay,
         ]);
