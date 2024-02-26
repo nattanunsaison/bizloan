@@ -4,10 +4,11 @@ files:
   - source: /
     destination: /var/www/bizloan
 hooks:
-  BeforeInstall: 
+  AfterInstall:
     - location: deploy_scripts/install_dependencies.sh
       timeout: 300
       runas: root
-  AfterInstall: ""
-  ApplicationStart: ""
-  ApplicationStop: ""
+  ApplicationStart:
+    - location: deploy_scripts/install_dependencies.sh
+      timeout: 300
+      runas: root
