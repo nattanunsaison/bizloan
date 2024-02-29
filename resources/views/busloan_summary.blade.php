@@ -14,11 +14,12 @@
                             <th>Interest rate%</th>
                             <th>Discount rate%</th>
                             <th>Delay penalty%</th>
+                            <th>Installments</th>
                             <th>Tax ID</th>
                             <th>Company Name (en)</th>
                             <th>Company Name (th)</th>
                             <th>Amount</th>
-                            <th>Interest (old)</th>
+                            {{--<th>Interest (old)</th>--}}
                             <th>Draw down date</th>
                             <th>Bill date</th>
                             <th>Due date</th>
@@ -29,6 +30,7 @@
                             <th>Delay penalty</th>
                             <th>Paid up date</th>
                             <th>Cancelled at</th>
+                            <th>Exceeded amount</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -47,11 +49,12 @@
                             <td @if($is_delay_and_not_paid_up) class='bg-red-500 text-white' @elseif($is_paid_up) class='bg-gray-400 text-white' @endif>{{number_format($order->product_offering->interest_rate,2)}}</td>
                             <td @if($is_delay_and_not_paid_up) class='bg-red-500 text-white' @elseif($is_paid_up) class='bg-gray-400 text-white' @endif>{{number_format($order->product_offering->discount_rate,2)}}</td>
                             <td @if($is_delay_and_not_paid_up) class='bg-red-500 text-white' @elseif($is_paid_up) class='bg-gray-400 text-white' @endif>{{number_format($order->product_offering->delay_penalty_rate,2)}}</td>
+                            <td @if($is_delay_and_not_paid_up) class='bg-red-500 text-white' @elseif($is_paid_up) class='bg-gray-400 text-white' @endif>{{number_format($order->product_offering->product->installments)}}</td>
                             <td @if($is_delay_and_not_paid_up) class='bg-red-500 text-white' @elseif($is_paid_up) class='bg-gray-400 text-white' @endif>{{$order->customer->tax_id}}</td>
                             <td @if($is_delay_and_not_paid_up) class='bg-red-500 text-white' @elseif($is_paid_up) class='bg-gray-400 text-white' @endif class='text-left'>{{$order->customer->en_company_name}}</td>
                             <td @if($is_delay_and_not_paid_up) class='bg-red-500 text-white' @elseif($is_paid_up) class='bg-gray-400 text-white' @endif class='text-left'>{{$order->customer->th_company_name}}</td>
                             <td @if($is_delay_and_not_paid_up) class='bg-red-500 text-white' @elseif($is_paid_up) class='bg-gray-400 text-white' @endif class='text-right'>{{number_format($order->installments->first()->principal,2)}}</td>
-                            <td @if($is_delay_and_not_paid_up) class='bg-red-500 text-white' @elseif($is_paid_up) class='bg-gray-400 text-white' @endif class='text-right'>{{number_format($order->installments->first()->interest,2)}}</td>
+                            {{--<td @if($is_delay_and_not_paid_up) class='bg-red-500 text-white' @elseif($is_paid_up) class='bg-gray-400 text-white' @endif class='text-right'>{{number_format($order->installments->first()->interest,2)}}</td> --}}
                             <td @if($is_delay_and_not_paid_up) class='bg-red-500 text-white' @elseif($is_paid_up) class='bg-gray-400 text-white' @endif>{{$order->purchase_ymd}}</td>
                             <td @if($is_delay_and_not_paid_up) class='bg-red-500 text-white' @elseif($is_paid_up) class='bg-gray-400 text-white' @endif>{{$order->bill_date}}</td>
                             <td @if($is_delay_and_not_paid_up) class='bg-red-500 text-white' @elseif($is_paid_up) class='bg-gray-400 text-white' @endif>{{$order->installments->first()->due_ymd}}</td>
@@ -61,6 +64,13 @@
                             <td @if($is_delay_and_not_paid_up) class='bg-red-500 text-white' @elseif($is_paid_up) class='bg-gray-400 text-white' @endif>{{number_format($interest_with_date['date_diff_from_due'])}}</td>
                             <td @if($is_delay_and_not_paid_up) class='bg-red-500 text-white' @elseif($is_paid_up) class='bg-gray-400 text-white' @endif>{{number_format($interest_with_date['delay_penalty'],2)}}</td>
                             <td @if($is_delay_and_not_paid_up) class='bg-red-500 text-white' @elseif($is_paid_up) class='bg-gray-400 text-white' @endif>{{$order->installments->first()->paid_up_ymd}}</td>
+                            @php 
+                                $sum_exceeded_amount = 0;
+                                foreach($order->receive_histories as $history){
+                                    $sum_exceeded_amount += $history->receive_amount_detail->exceeded_occurred_amount;
+                                }
+                            @endphp
+                            <td @if($is_delay_and_not_paid_up) class='bg-red-500 text-white' @elseif($is_paid_up) class='bg-gray-400 text-white' @endif>{{number_format($sum_exceeded_amount,2)}}</td>
                             <td @if($is_delay_and_not_paid_up) class='bg-red-500 text-white' @elseif($is_paid_up) class='bg-gray-400 text-white' @endif>{{$order->canceled_at}}</td>
                             
                             <td class="text-center">
@@ -83,6 +93,17 @@
                                         >
                                             Send statement
                                     </button>
+                                    <a href="../create_agreement?order_id={{$order->id}}" target='_blank'>
+                                        <button
+                                            type="button"
+                                            class="inline-block w-50 bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase text-white hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                                            data-te-ripple-init
+                                            data-te-ripple-color="light"
+                                            onclick='({{$order->id}})'
+                                            >
+                                                Download agreement
+                                        </button>
+                                    </a>
                                 </div>
                             </td>
                         </tr>
@@ -154,10 +175,10 @@
         title = "SCF-order_list-"+now
         var table = $('#table_id').DataTable({
                 // responsive: true,
-                order: [[ 0, "asc" ]],
+                order: [[ 0, "desc" ]],
                 "columnDefs": [
                     { targets: [1,2,3], className: 'dt-body-left'},
-                    { targets: [3,4,5,14,15,16,17,18], className: 'dt-body-right'},
+                    { targets: [3,4,5,6,14,15,16,17,18], className: 'dt-body-right'},
                     { "orderable": true, "targets": [0,1,7,8,9,10,11] },
                     { "orderable": false, "targets": '_all' },
                 ],

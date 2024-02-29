@@ -93,12 +93,27 @@ class FontVariables
 			 */
 
 			'fontdata' => [
+				"nunito" => [
+					'R' => "Nunito-Regular.ttf",
+					'B' => "Nunito-Bold.ttf",
+					'I' => "Nunito-Italic.ttf",
+					'BI' => "Nunito-BoldItalic.ttf",
+					//'useOTL' => 0xFF,
+				],
 				"browallia" => [
 					'R' => "browalliaupc.ttf",
 					'B' => "browaub.ttf",
 					'I' => "browaui.ttf",
 					'BI' => "browauz.ttf",
 					//'useOTL' => 0xFF,
+				],
+				"trirong" => [
+					'R' => "Trirong-Regular.ttf",
+					'B' => "Trirong-Bold.ttf",
+					'I' => "Trirong-Italic.ttf",
+					'BI' => "Trirong-BoldItalic.ttf",
+					'useOTL' => 0xFF,
+					'useKashida' => 75,
 				],
 				"dejavusanscondensed" => [
 					'R' => "DejaVuSansCondensed.ttf",

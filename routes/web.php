@@ -101,6 +101,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/send_statement',[InternalApiController::class,'sendStatement']);
 
     Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
+
+    Route::get('/create_agreement', [BusinessLoanController::class, 'createAgreement']);
+
+    Route::post('/create_agreement', [BusinessLoanController::class, 'createAgreement']);
+
+    Route::post('/create_product', [BusinessLoanController::class, 'createProduct']);
 });
 
 
@@ -113,7 +119,9 @@ Route::middleware('auth')->group(function () {
 Route::get('/test_anything',function(){
     // return config('app.url');
     $users = (new \App\Http\Controllers\HelperController)->getSSARoleUserId();
-    $order = \App\Models\order::where('order_number','BL20240216-1509')->first();
+    $order = \App\Models\order::where('order_number','BL20240229-1240')->first();
+    //return $order->product_offering;
+    //return $order->product_offering->product;
     event(new DrawdownConfirmed($order));
     return;
     // return $drawdown_id;

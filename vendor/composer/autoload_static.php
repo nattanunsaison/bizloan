@@ -644,6 +644,7 @@ class ComposerStaticInit365a5d35deb1454ad2969a388724717b
         'App\\Models\\Customer' => __DIR__ . '/../..' . '/app/Models/Customer.php',
         'App\\Models\\DealerBankAccountDetail' => __DIR__ . '/../..' . '/app/Models/DealerBankAccountDetail.php',
         'App\\Models\\Eligibility' => __DIR__ . '/../..' . '/app/Models/Eligibility.php',
+        'App\\Models\\HelperController' => __DIR__ . '/../..' . '/app/Models/HelperController.php',
         'App\\Models\\Product' => __DIR__ . '/../..' . '/app/Models/Product.php',
         'App\\Models\\ProductOffering' => __DIR__ . '/../..' . '/app/Models/ProductOffering.php',
         'App\\Models\\ReceiveAmountDetail' => __DIR__ . '/../..' . '/app/Models/ReceiveAmountDetail.php',

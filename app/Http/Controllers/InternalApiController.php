@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 // use App\Events\{ReceiveAmountConfirm,DeleteAmountConfirm};
 use App\Models\{order,contractors,Customer,dealers,ReceiveAmountHistory,ReceiveAmountDetail,User,
-    ProductOffering,installments,installmentHistory};
+    ProductOffering,installments,installmentHistory,Product};
 use Illuminate\View\View;
 use Illuminate\Support\Arr;
 use App\Events\ReceiveAmountConfirm;
@@ -74,32 +74,26 @@ class InternalApiController extends Controller
     public function productInformation(Request $request){
         // return $request->offering_id;
         
-        $product_information = ProductOffering::leftJoin('products','product_offerings.product_id','products.id')
-                            ->where('product_offerings.id', '=', $request->offering_id)
-                            ->select(
-                                'product_offerings.id', 'product_offerings.offering_grade',
-                                'product_offerings.interest_rate', 'product_offerings.delay_penalty_rate', 'product_offerings.discount_rate',
-                                'products.product_code','products.product_name','products.terms','products.loan_amount'
-                            )
+        $product_information = Product::query()
+                            //leftJoin('products','product_offerings.product_id','products.id')
+                            ->where('products.id', '=', $request->offering_id)
+                            // ->select(
+                            //     'product_offerings.id', 'product_offerings.offering_grade',
+                            //     'product_offerings.interest_rate', 'product_offerings.delay_penalty_rate', 'product_offerings.discount_rate',
+                            //     'products.product_code','products.product_name','products.terms','products.loan_amount'
+                            // )
                             ->get()->first();
         
         return $product_information;
     }
     
     public function duedateCalculation(Request $request){
-        // return $request;
+        //return $request;
         // return $request->product_offering_id;
         $transfer_date = $request->transfer_date;
         $product_offering_id = $request->product_offering_id;
         
-        $product_information = ProductOffering::leftJoin('products','product_offerings.product_id','products.id')
-                            ->where('product_offerings.id', '=', $product_offering_id)
-                            ->select(
-                                'product_offerings.id', 'product_offerings.offering_grade',
-                                'product_offerings.interest_rate', 'product_offerings.delay_penalty_rate', 'product_offerings.discount_rate',
-                                'products.product_code','products.product_name','products.terms','products.loan_amount'
-                            )
-                            ->get()->first();
+        $product_information = Product::find($product_offering_id);
         
         $day_diff = $product_information->terms;
         $due_date = Carbon::createFromFormat('d/m/Y',$transfer_date)->addDays($day_diff)->format('d/m/Y');
@@ -108,23 +102,27 @@ class InternalApiController extends Controller
     
     //Route::post('/drawdown_input',[InternalApiController::class,'drawdownInput']);
     public function drawdownInput(Request $request){
-        // return $request;
+        //return $request;
 
         $tax_id = $request->tax_id;
-        $product_offering_id = $request->product_offering_id;
+        $product_id = $request->product_id;
         $loan_amount = $request->loan_amount;
         $get_transfer_date = $request->transfer_date;
         $due_date = $request->due_date;
         $staff_userid = $request->staff_userid;
+        $interest_rate = $request->interest_rate;
+        $delay_penalty_rate = $request->delay_penalty_rate;
+        $discount_rate = $request->discount_rate;
 
-        $productInformation = ProductOffering::leftJoin('products','product_offerings.product_id','products.id')
-                            ->where('product_offerings.id', '=', $product_offering_id)
-                            ->select(
-                                'product_offerings.id', 'product_offerings.offering_grade',
-                                'product_offerings.interest_rate', 'product_offerings.delay_penalty_rate', 'product_offerings.discount_rate',
-                                'products.product_code','products.product_name','products.terms','products.loan_amount'
-                            )
-                            ->get()->first();
+        // $productInformation = ProductOffering::leftJoin('products','product_offerings.product_id','products.id')
+        //                     ->where('product_offerings.id', '=', $product_offering_id)
+        //                     ->select(
+        //                         'product_offerings.id', 'product_offerings.offering_grade',
+        //                         'product_offerings.interest_rate', 'product_offerings.delay_penalty_rate', 'product_offerings.discount_rate',
+        //                         'products.product_code','products.product_name','products.terms','products.loan_amount'
+        //                     )
+        //                     ->get()->first();
+        $product = Product::find($product_id);
                             
         $customerData = Customer::where('ready_status', 1)
                         ->where('tax_id', $tax_id)
@@ -134,15 +132,14 @@ class InternalApiController extends Controller
                         )
                         ->get()->first();
         
-        $interestRate = $productInformation->interest_rate;
-        $delayPenaltyRate = $productInformation->delay_penalty_rate;
-        $discountRate = $productInformation->discount_rate;
-        $principal = $productInformation->loan_amount;
-        $day_diff = $productInformation->terms;
+        $interestRate = $interest_rate;
+        $delayPenaltyRate = $delay_penalty_rate;
+        $discountRate = $discount_rate;
+        $principal = $product->loan_amount;
+        $day_diff = $product->terms;
         // $due_date = Carbon::parse($transfer_date)->addDays($day_diff);
         $transfer_date = Carbon::createFromFormat('d/m/Y',$get_transfer_date)->format('Ymd');
         $due_date = Carbon::createFromFormat('d/m/Y',$get_transfer_date)->addDays($day_diff)->format('Ymd');
-
 
         $interest = floor($interestRate/100/365*$principal*100*$day_diff)/100;
 
@@ -152,11 +149,20 @@ class InternalApiController extends Controller
         
         try {
             DB::beginTransaction();
+            //check whether already have product offering or not
+            $product_offering = ProductOffering::firstOrCreate([
+                'product_id'=>$product_id,
+                'interest_rate'=>$interest_rate,
+                'delay_penalty_rate'=>$delay_penalty_rate,
+                'discount_rate'=>$discount_rate,
+            ]);
+
             $drawdown_input_create = order::create([
                 'order_number'=>$drawdown_id,
                 'customer_id'=>$customerData->id,
                 'order_type'=>1,
-                'product_offering_id'=>$productInformation->id,
+                'product_offering_id'=>$product_offering->id,
+                'product_id'=>$product_id,
                 'bill_date'=>$formatNow,
                 'installment_count'=>1,
                 'purchase_ymd'=>$transfer_date,

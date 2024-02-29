@@ -9,13 +9,14 @@
         
         <style type='text/css'>
             body {
-                font-family: 'browallia';
+                font-family: 'Trirong';
                 height: 842px;
                 width: 595px;
                 /* to centre page on screen*/
                 margin-top:10px;
                 margin-left: auto;
                 margin-right: auto;
+                font-size: 12px;
             }
             .bottom-border{
                 border-bottom: 1px solid black;
@@ -35,7 +36,7 @@
         </style>
     </head>
     <body size='A4'>
-    <table style="width:100%">
+    <table style="width:100%;">
         <tbody>
             <tr>
                 <td colspan='10' rowspan='4'><img src="../images/saison_credit.png" alt='saison_credit_logo' style="float:left;height:90px;"></td>
@@ -58,7 +59,7 @@
                     <tr>
                         {{-- customer name --}}
                         <td colspan='14' style='text-align:left'>{{ $order->th_company_name }}</td>
-                        <td colspan='15' style='text-align:right'>เลขที่ 1 ถนนปูนซิเมนต์ไทย บางซื่อ กรุงเทพฯ 10800</td>
+                        <td colspan='15' style='text-align:right;'>เลขที่ 1 ถนนปูนซิเมนต์ไทย บางซื่อ กรุงเทพฯ 10800</td>
                     </tr>
                     <tr>
                         {{-- customer address --}}
@@ -67,7 +68,7 @@
                     </tr>
                     <tr>
                         <td colspan='14' style='text-align:left'>เลขทะเบียนนิติบุคคล : {{ $order->tax_id }}</td>
-                        <td colspan='15' style='text-align:right'>เวลาทำการ จันทร์ - ศุกร์ 09.00 - 17.00 ยกเว้นวันหยุดนักขัตฤกษ์</td>
+                        <td colspan='15' style='text-align:right'>เวลาทำการ จันทร์ - ศุกร์ <span>{{number_format(9,2)}} - {{number_format(17,2)}}</span> ยกเว้นวันหยุดนักขัตฤกษ์</td>
                     </tr>
                     <tr style="color:white"> <td colspan='29'>x</td> <tr>
                     <tr style="background-color:#FF0000"> <td colspan='29'></td> <tr>
@@ -88,66 +89,94 @@
                     <tr>
                         <td colspan='1'></td>
                         <td colspan='3' style='text-align:left;width:40px'>ยอดเงินกู้</td>
-                        <td colspan='1' style='text-align:right'>{{ number_format($order->loan_amount,2) }}</td>
+                        <td colspan='1' style='text-align:right'>{{ number_format($order->product_offering->product->loan_amount,2) }}</td>
                         <td colspan='1' style='text-align:left;width:300px;background-color:red'></td>
                         {{-- <td></td> --}}
                     </tr>
                     <tr>
                         <td colspan='1'></td>
                         <td colspan='3' style='text-align:left'>ระยะเวลา (วัน)</td>
-                        <td colspan='1' style='text-align:right'>{{ number_format($order->terms) }}</td>
+                        <td colspan='1' style='text-align:right'>{{ number_format($order->product_offering->product->terms) }}</td>
                         <td colspan='1'></td>
                     </tr>
                     <tr>
                         <td colspan='1'></td>
                         <td colspan='3' style='text-align:left'>อัตราดอกเบี้ย (%)</td>
-                        <td colspan='1' style='text-align:right'>{{ number_format($order->interest_rate,2) }}</td>
+                        <td colspan='1' style='text-align:right'>{{ number_format($order->product_offering->interest_rate,2) }}</td>
                         <td colspan='1'></td>
                     </tr>
                     <tr>
                         <td colspan='1'></td>
                         <td colspan='3' style='text-align:left;'>อัตราดอกเบี้ยปรับผิดนัดชำระ (%)</td>
-                        <td colspan='1' style='text-align:right'>{{ number_format($order->delay_penalty_rate,2) }}</td>
+                        <td colspan='1' style='text-align:right'>{{ number_format($order->product_offering->delay_penalty_rate,2) }}</td>
                         <td colspan='1'></td>
                     </tr>
-                    @if ( $order->discount_rate > 0 )
+                    @if ( $order->product_offering->discount_rate > 0 )
                         <tr>
                             <td colspan='1'></td>
                             <td colspan='3' style='text-align:left'>อัตราส่วนลดดอกเบี้ย (%)</td>
-                            <td colspan='1' style='text-align:right'>{{ number_format($order->discount_rate,2) }}</td>
+                            <td colspan='1' style='text-align:right'>{{ number_format($order->product_offering->discount_rate,2) }}</td>
                             <td colspan='1'></td>
                         </tr>
                     @endif
             </table>
             <h4>รายละเอียดการชำระ</h4>
-            <table style="width:100%">              
-                <tr>
-                    <td colspan='1'></td>
-                    <td colspan='3'></td>
-                    <td colspan='1' style='text-align:left'>จำนวนเงิน(บาท)</td>
-                    <td colspan='1'></td>
-                </tr>
-                <tr>
-                    <td colspan='1'></td>
-                    <td colspan='3' style='text-align:left'>ยอดเงินต้นคงค้าง</td>
-                    <td colspan='1' style='text-align:right'>{{ number_format($order->bill_principal,2) }}</td>
-                    <td colspan='1' style='text-align:left;width:300px;background-color:red'></td>
-                </tr>
-                <tr>
-                    <td colspan='1'></td>
-                    <td colspan='3' style='text-align:left'>ยอดดอกเบี้ยคงค้าง</td>
-                    <td colspan='1' style='text-align:right'>{{ number_format($order->bill_interest,2) }}</td>
-                    <td colspan='1'></td>
-                </tr>
-                <tr>
-                    <td colspan='1'></td>
-                    <td colspan='3' style='text-align:left'>ยอดรวมที่ต้องชำระงวดนี้</td>
-                    <td colspan='1' style='text-align:right'>{{ number_format($order->bill_total,2) }}</td>
-                    <td colspan='1'></td>
-                </tr>
-                @for($i = 0; $i < 8;$i++)
-                <tr><td colspan='6' style='color:white'>x</td></tr>
-                @endfor
+            <table style="width:100%">
+                @php 
+                    $total_installments =$order->product_offering->product->installments; 
+                @endphp
+                @if($total_installments == 1)    {{--Normal bizloan--}}     
+                    <tr>
+                        <td colspan='1'></td>
+                        <td colspan='3'></td>
+                        <td colspan='1' style='text-align:left'>จำนวนเงิน(บาท)</td>
+                        <td colspan='1'></td>
+                    </tr>
+                    <tr>
+                        <td colspan='1'></td>
+                        <td colspan='3' style='text-align:left'>ยอดเงินต้นคงค้าง</td>
+                        <td colspan='1' style='text-align:right'>{{ number_format($order->bill_principal,2) }}</td>
+                        <td colspan='1' style='text-align:left;width:300px;background-color:red'></td>
+                    </tr>
+                    <tr>
+                        <td colspan='1'></td>
+                        <td colspan='3' style='text-align:left'>ยอดดอกเบี้ยคงค้าง</td>
+                        <td colspan='1' style='text-align:right'>{{ number_format($order->bill_interest,2) }}</td>
+                        <td colspan='1'></td>
+                    </tr>
+                    <tr>
+                        <td colspan='1'></td>
+                        <td colspan='3' style='text-align:left'>ยอดรวมที่ต้องชำระงวดนี้</td>
+                        <td colspan='1' style='text-align:right'>{{ number_format($order->bill_total,2) }}</td>
+                        <td colspan='1'></td>
+                    </tr>
+                    @for($i = 0;$i < 10;$i++)
+                    <tr><td colspan='6' style='color:black'>x</td></tr>
+                    @endfor
+                @else {{--Bizloan plus--}}
+                    <tr>
+                        <th>งวด</th>
+                        <th>วันครบกำหนดชำระ</th>
+                        <th>ยอดชำระ</th>
+                        <th>จ่ายชำระ</th>
+                    </tr>
+                    @for($i = 0; $i < $total_installments; $i++)
+                    <tr>
+                        <td>{{$i+1}}/{{$total_installments}}</td>
+                        <td style='text-align:center'>{{(new \App\Http\Controllers\HelperController)->dateThai(\Carbon\Carbon::parse($order->purchase_ymd)->addDays(($i+1)*30))}}</td>
+                        @if($i != $total_installments - 1)
+                        <td style='text-align:right'>{{number_format($order->installments->first()->interest/$total_installments,2)}}</td>
+                        <td style='text-align:center'>ดอกเบี้ย</td>
+                        @else 
+                        <td style='text-align:right'>{{number_format($order->purchase_amount + $order->installments->first()->interest/$total_installments,2)}}</td>
+                        <td style='text-align:center'>เงินต้น+ ดอกเบี้ย</td>
+                        @endif
+                    </tr>
+                    @endfor
+                    @for($i = 0;$i < 6;$i++)
+                    <tr><td colspan='4' style='color:black'>x</td></tr>
+                    @endfor
+                @endif
             </table>
             <table style="width:100%;border-collapse: collapse;">
                 <tr style="background-color:black"> <td colspan='4'></td> <tr>
@@ -157,7 +186,7 @@
                 <tr>
                     <td colspan='14'></td>
                 </tr>
-                <tr style="background-color:red; color: white;"> <td colspan='29' style='text-align:center;color:white' >ช่องทางการชำระเงิน และการนำส่งหลักฐานการชำระเงิน</td> <tr>
+                <tr style="background-color:red; color: white;"> <td colspan='29' style='text-align:center;color:white;font-weight:bold' >ช่องทางการชำระเงิน และการนำส่งหลักฐานการชำระเงิน</td> <tr>
                 <tr>
                     <td colspan='1'>ธนาคาร</td>
                     <td colspan='1'>ไทยพาณิชย์ จำกัด (มหาชน)</td>

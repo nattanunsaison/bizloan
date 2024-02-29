@@ -209,6 +209,7 @@
                             <option value="100000.00">100,000.00</option>
                             <option value="300000.00">300,000.00</option>
                             <option value="500000.00">500,000.00</option>
+                            <option value="1000000.00">1,000,000.00</option>
                         </select>
                         <label data-te-select-label-ref>Business loan amount</label>
                     </div>

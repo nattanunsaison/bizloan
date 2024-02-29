@@ -126,7 +126,7 @@
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="relative mb-6" data-te-input-wrapper-init>
+                        {{--<div class="relative mb-6" data-te-input-wrapper-init>
                             <input data-te-input-state-active
                             type="text"
                             class="peer block min-h-[auto] w-full rounded border-0 bg-neutral-100 px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:bg-neutral-700 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
@@ -134,15 +134,30 @@
                             aria-describedby="interest_rate"
                             placeholder="Interest rate"
                             value="{{$products[0]->interest_rate}}"
-                            disabled />
+                            disabled/>
                             <label
                             for="interest_rate"
                             class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
                             >Interest rate
                             </label>
-                        </div>
-
+                        </div>--}}
                         <div class="relative mb-6" data-te-input-wrapper-init>
+                            <input
+                            type="text"
+                            class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                            placeholder="Interest rate"
+                            name="interest_rate"
+                            id="interest_rate"
+                            value="{{$products[0]->interest_rate}}"
+                            />
+                            <label
+                            for="test"
+                            class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
+                            >
+                                Interest rate
+                            </label>
+                        </div>
+                        {{--<div class="relative mb-6" data-te-input-wrapper-init>
                             <input data-te-input-state-active
                             type="text"
                             class="peer block min-h-[auto] w-full rounded border-0 bg-neutral-100 px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:bg-neutral-700 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
@@ -156,11 +171,27 @@
                             class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
                             >Delay penalty rate
                             </label>
+                        </div>--}}
+                        <div class="relative mb-6" data-te-input-wrapper-init>
+                            <input
+                            type="text"
+                            class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                            placeholder="Delay penalty rate"
+                            name="delay_penalty_rate"
+                            id="delay_penalty_rate"
+                            value="{{$products[0]->delay_penalty_rate}}"
+                            />
+                            <label
+                            for="test"
+                            class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
+                            >
+                            Delay penalty rate
+                            </label>
                         </div>
                     </div>
                     
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="relative mb-6" data-te-input-wrapper-init>
+                        {{--<div class="relative mb-6" data-te-input-wrapper-init>
                             <input data-te-input-state-active
                             type="text"
                             class="peer block min-h-[auto] w-full rounded border-0 bg-neutral-100 px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:bg-neutral-700 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
@@ -174,6 +205,22 @@
                             class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
                             >Discount rate
                             </label>
+                        </div>--}}
+                        <div class="relative mb-6" data-te-input-wrapper-init>
+                            <input
+                            type="text"
+                            class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                            placeholder="Discount rate"
+                            name="discount_rate"
+                            id="discount_rate"
+                            value="{{$products[0]->discount_rate}}"
+                            />
+                            <label
+                            for="test"
+                            class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
+                            >
+                            Discount rate
+                            </label>
                         </div>
 
                         <div class="relative mb-6" data-te-input-wrapper-init>
@@ -184,7 +231,6 @@
                             id="loan_amount"
                             aria-describedby="loan_amount"
                             placeholder="Loan amount"
-                            {{-- value="{{ number_format($products[0]->loan_amount,2) }}" --}}
                             value="{{ number_format($products[0]->loan_amount,2) }}"
                             disabled />
                             <label
@@ -256,6 +302,7 @@
         </div>
     </div>
 </x-busloanapp-layout>
+<x-processing></x-processing>
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css">
@@ -324,6 +371,7 @@
 </div>
 
 <script>
+    
     $(document).ready(function() {
         now = "{{\Carbon\Carbon::now()->isoFormat('YYYYMMMDD-HHmm')}}"
         title = "SCF-order_list-"+now
@@ -390,7 +438,7 @@
             data : fd,
             success: function(data){
                 console.log('success');
-                console.log(data);
+                console.log(data.product_code);
                 
                 $('#product_code').val(data.product_code)
                 $('#terms').val(data.terms)
@@ -437,20 +485,27 @@
 
     function submit_drawdown_input(data){
         console.log(data);
+        processing_modal.show()
         closest_div = $('.formdata').closest(data)
         tax_id = $('[name=tax_id]').val()
         loan_amount = $('[name=loan_amount]').val()
         product_offering_id = $('[name=product] option:selected').val()
         transfer_date = $('[name=transfer_date]').val()
         due_date = $('[name=due_date]').val()
+        interest_rate = $('[name=interest_rate]').val()
+        delay_penalty_rate = $('[name=delay_penalty_rate]').val()
+        discount_rate = $('[name=discount_rate]').val()
         
         uri = '/api/drawdown_input'
         const fd = new FormData();
         fd.append('_token','{{csrf_token()}}');
         fd.append('tax_id',tax_id)
-        fd.append('product_offering_id',product_offering_id)
+        fd.append('product_id',product_offering_id)
         fd.append('loan_amount',loan_amount)
         fd.append('transfer_date',transfer_date)
+        fd.append('interest_rate',interest_rate)
+        fd.append('delay_penalty_rate',delay_penalty_rate)
+        fd.append('discount_rate',discount_rate)
         fd.append('due_date',due_date)
         fd.append('staff_username', $('[data-username]').attr('data-username'))
         fd.append('staff_userid', $('[data-userid]').attr('data-userid'))
@@ -465,7 +520,7 @@
             success: function(data){
                 console.log('success');
                 console.log(data);
-                
+                processing_modal.hide()
                 window.alert(data.message);
                 window.location.href = "/business_loan/summary";
             },

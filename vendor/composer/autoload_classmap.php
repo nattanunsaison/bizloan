@@ -63,6 +63,7 @@ return array(
     'App\\Models\\Customer' => $baseDir . '/app/Models/Customer.php',
     'App\\Models\\DealerBankAccountDetail' => $baseDir . '/app/Models/DealerBankAccountDetail.php',
     'App\\Models\\Eligibility' => $baseDir . '/app/Models/Eligibility.php',
+    'App\\Models\\HelperController' => $baseDir . '/app/Models/HelperController.php',
     'App\\Models\\Product' => $baseDir . '/app/Models/Product.php',
     'App\\Models\\ProductOffering' => $baseDir . '/app/Models/ProductOffering.php',
     'App\\Models\\ReceiveAmountDetail' => $baseDir . '/app/Models/ReceiveAmountDetail.php',
